@@ -20,19 +20,12 @@ body {
   text-align: center;
 }
 
-h2 {
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 1);
-  color: #fff;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  text-align: center;
-}
-
 .chat-container {
   background: linear-gradient(to right, #482a, #fffa);
   margin: 5% 20%;
   width: 60%;
-  /* height: 540px; */
+  height: 75%;
+  /* max-height: 720px; */
   min-width: 480px;
   border-radius: 2rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
@@ -49,7 +42,7 @@ h2 {
   overflow: auto;
   list-style-type: none;
   padding: 0 2%;
-  margin-top: 1rem;
+  margin: 1%;
 }
 
 .top {
@@ -67,14 +60,34 @@ h2 {
 	padding: 1.5rem 0;
 }
 
+h2 {
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 1);
+  color: #fff;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.avatar {
+  border-radius: 50%;
+  object-fit: cover;
+  position: relative;
+  margin-top: 10px;
+  margin-right: 10px;
+  width: 50px;
+  height: 50px;
+  border: 2px solid #b8c4cc;
+}
+
 .message {
-  border-radius: 50px;
+  border-radius: 1rem;
   position: relative;
 }
 
 .message.left {
-  padding: 15px 20px 15px 70px;
+  padding: 0.7rem 1rem;
   margin-top: 20px;
+  max-width: 85%;
   background-color: #fff;
   border: 2px solid #cccccc;
   text-align: left;
@@ -82,28 +95,12 @@ h2 {
 
 .message.right {
   align-self: flex-end;
-  padding: 15px 70px 15px 20px;
+  padding: 0.7rem 1rem;
   margin-top: 20px;
+  max-width: 85%;
   background-color: #4b802f;
   color: #fff;
-  text-align: right;
-}
-
-.avatar {
-  border-radius: 50%;
-  object-fit: cover;
-  position: absolute;
-  left: 10px;
-  top: -10px;
-  width: 50px;
-  height: 50px;
-  border: 2px solid #b8c4cc;
-}
-
-.message.right .avatar {
-  left: auto;
-  right: 10px;
-  border-color: #5C8049;
+  text-align: left;
 }
 
 .message p {
