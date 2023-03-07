@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Restaurant ChatBot</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
     <div class="chat-container">
@@ -37,10 +37,16 @@
         <li class="message right">
           <p>Some guy says he's got your phone.</p>
         </li>
+        <li class="message right">
+          <p>Some guy says he's got your phone.</p>
+        </li>
+        <li class="message selected">
+          <p>Some guy says he's got your phone.</p>
+        </li>
       </ul>
 
       <div class="bottom">
-        <form>
+        <form id="message_form">
           <input type="text" class="text_input" placeholder="Message..." />
           <button class="btn">Send <i class="fas fa-paper-plane"></i></button>
         </form>
@@ -50,4 +56,5 @@
     <p>Source code for <a href="https://codepen.io/solygambas/pen/MWJxaOJ">Chat interface</a> on codepen.io</p>
     </footer> -->
   </body>
+  <script src="js/main.js"></script>
 </html>
