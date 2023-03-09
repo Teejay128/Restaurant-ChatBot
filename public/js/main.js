@@ -1,37 +1,43 @@
-const chat = document.querySelector('.chat')
-const message_form = document.querySelector('#message_form')
-const text_input = document.querySelector('.text_input')
+const chatMessages = document.querySelector('.chat')
+const chatForm = document.querySelector('#message_form')
+const textInput = document.querySelector('.text_input')
 
-message_form.addEventListener("submit", newRequest)
+const socket = io()
+
+socket.on('message', (msg) => {
+    chatbotReply(msg)
+})
 
 // User enters a message
-function newRequest(e) {
+chatForm.addEventListener("submit", (e) => {
     e.preventDefault()
 
-    const msg = text_input.value
+    const msg = textInput.value
     const newMessage = `
     <div class="message right">
         <p>${msg}</p>
     </div>
     `
-    chat.innerHTML += newMessage
-    timeoutFunction(`A reply to ${msg}`, 1000)
-    text_input.value = ""
-}
+    chatMessages.innerHTML += newMessage
+    timeoutFunction(`A reply to ${msg}`)
+    chatForm.value = ""
+    // chatForm.focus()
+})
 
 // Replies the user
-function reply(msg){
+function chatbotReply(msg){
     const messageReply = `
     <div class="message left">
         <p>${msg}</p>
     </div>
     `
-    chat.innerHTML += messageReply
+    chatMessages.innerHTML += messageReply
 }
 
 // Makes request to the backend, then calls reply function
-function timeoutFunction(msg, time) {
+function timeoutFunction(msg) {
+    const time = Math.floor(Math.random() * 3000)
     setTimeout(() => {
-        reply(msg)
+        messageReply(msg)
     }, time)
 }

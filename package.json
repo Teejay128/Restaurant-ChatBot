@@ -1,0 +1,29 @@
+{
+  "name": "restaurant-chatbot",
+  "version": "1.0.0",
+  "description": "A restaurant chatbot that will assist customers in placing orders for their preferred meals.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Teejay128/Restaurant-ChatBot.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Teejay128/Restaurant-ChatBot/issues"
+  },
+  "homepage": "https://github.com/Teejay128/Restaurant-ChatBot#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "moment": "^2.29.4",
+    "morgan": "^1.10.0",
+    "socket.io": "^4.6.1"
+  }
+}
