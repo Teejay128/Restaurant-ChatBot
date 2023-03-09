@@ -12,11 +12,8 @@ body {
   justify-content: center;
   min-height: 100vh;
   background-color: #000000;
-  background-image: url("../assets/medium.jpg");
-  background-repeat: no-repeat;
+  background-image: url("../assets/potrait.jpg");
   background-size: cover;
-  background-attachment: fixed;
-  background-position: center;
   text-align: center;
 }
 
@@ -26,6 +23,7 @@ body {
   width: 60%;
   height: 75%;
   /* max-height: 720px; */
+  justify-content: top;
   min-width: 480px;
   border-radius: 2rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
@@ -36,13 +34,10 @@ body {
 .chat {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  /* height: 480px; */
-  overflow: auto;
-  list-style-type: none;
+  height: 480px;
+  overflow-y: scroll;
   padding: 0 2%;
-  margin: 1%;
+  /* margin: 1%; */
 }
 
 .top {
