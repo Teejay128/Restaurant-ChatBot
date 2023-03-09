@@ -13,31 +13,31 @@ chatForm.addEventListener("submit", (e) => {
     e.preventDefault()
 
     const msg = textInput.value
+    socket.emit("request", msg)
+
     const newMessage = `
-    <div class="message right">
-        <p>${msg}</p>
-    </div>
+        <div class="message right">
+            <p>${msg}</p>
+        </div>
     `
     chatMessages.innerHTML += newMessage
-    timeoutFunction(`A reply to ${msg}`)
-    chatForm.value = ""
-    // chatForm.focus()
+    textInput.value = ""
+    // timeoutFunction(`A reply to ${msg}`)
 })
 
 // Replies the user
 function chatbotReply(msg){
     const messageReply = `
-    <div class="message left">
-        <p>${msg}</p>
-    </div>
+        <div class="message left">
+            <p>${msg}</p>
+        </div>
     `
     chatMessages.innerHTML += messageReply
+    chatMessages.scrollTop = chatMessages.scrollHeight
 }
 
 // Makes request to the backend, then calls reply function
-function timeoutFunction(msg) {
-    const time = Math.floor(Math.random() * 3000)
-    setTimeout(() => {
-        messageReply(msg)
-    }, time)
+function timeoutFunction() {
+    // this handles message loader and other functionality for delivering response
+
 }
