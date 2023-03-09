@@ -4,6 +4,8 @@ const express = require('express')
 const socket = require('socket.io')
 require('dotenv').config()
 
+const optionsResponse = require('./src/utils/response.js')
+
 const app = express()
 const server = http.createServer(app)
 const io = socket(server)
@@ -20,8 +22,10 @@ app.get('/2', (req, res) => {
 })
 
 io.on('connection', (ws) => {
-    ws.emit('message', "Welcome, how can I help you")
+    ws.emit('message', optionsResponse("How would You rate our service").text)
+
     console.log("connection successul")
+
     /*
     * TODO
     * Add room functionality
