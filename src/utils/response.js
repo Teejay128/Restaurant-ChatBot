@@ -19,4 +19,3 @@ function formatMessage(text) {
 }
 
 module.exports = optionsResponse
-console.log(optionsResponse("What the fuck just happened"))

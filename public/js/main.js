@@ -5,7 +5,7 @@ const textInput = document.querySelector('.text_input')
 const socket = io()
 
 socket.on('message', (msg) => {
-    chatbotReply(msg)
+    chatbotReply(msg.text, msg.time)
 })
 
 // User enters a message
@@ -29,10 +29,11 @@ chatForm.addEventListener("submit", (e) => {
 })
 
 // Replies the user
-function chatbotReply(msg){
+function chatbotReply(text, time){
     const messageReply = `
         <div class="message left">
-            <p>${msg}</p>
+            ${text}
+            <p class="time">${time}</p>
         </div>
     `
     chatMessages.innerHTML += messageReply

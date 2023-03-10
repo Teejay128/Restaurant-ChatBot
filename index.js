@@ -22,7 +22,7 @@ app.get('/2', (req, res) => {
 })
 
 io.on('connection', (ws) => {
-    ws.emit('message', optionsResponse("How would You rate our service").text)
+    ws.emit('message', optionsResponse("How would You rate our service"))
 
     console.log("connection successul")
 
