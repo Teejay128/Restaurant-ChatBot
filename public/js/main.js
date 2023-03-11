@@ -2,21 +2,32 @@ const chatMessages = document.querySelector('.chat')
 const chatForm = document.querySelector('#message_form')
 const textInput = document.querySelector('.text_input')
 
+let emiiter = "mainmenu"
+
 const socket = io()
 
-socket.on('message', (msg) => {
-    chatbotReply(msg.text, msg.time)
+socket.on('message', (response) => {
+    let msg = `<h3>${response}</h3>`
+
+    chatbotReply(msg)
+})
+
+socket.on('options', (options) => {
+
+    console.log(options)
 })
 
 // User enters a message
 chatForm.addEventListener("submit", (e) => {
     e.preventDefault()
+    let destiantion = emiiter
 
     const msg = textInput.value
     if(msg === ""){
         return
     }
-    socket.emit("request", msg)
+
+    socket.emit(destiantion, msg)
 
     const newMessage = `
         <div class="message right">
@@ -29,11 +40,10 @@ chatForm.addEventListener("submit", (e) => {
 })
 
 // Replies the user
-function chatbotReply(text, time){
+function chatbotReply(text){
     const messageReply = `
         <div class="message left">
             ${text}
-            <p class="time">${time}</p>
         </div>
     `
     chatMessages.innerHTML += messageReply
