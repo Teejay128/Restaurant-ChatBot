@@ -2,32 +2,48 @@ const chatMessages = document.querySelector('.chat')
 const chatForm = document.querySelector('#message_form')
 const textInput = document.querySelector('.text_input')
 
-let emiiter = "mainmenu"
 
 const socket = io()
+chatForm.addEventListener("submit", sendMessage)
+let emitter = "mainmenu"
+
 
 socket.on('message', (response) => {
-    let msg = `<h3>${response}</h3>`
+    let msg = `<p>${response}</p>`
 
     chatbotReply(msg)
 })
 
 socket.on('options', (options) => {
+    let msg = ""
+    const selection = Object.keys(options)
+    selection.forEach((val) => {
+        msg += `<li class="option">Select ${val} to ${options[val]}</li>`
+    })
 
-    console.log(options)
+    chatbotReply(msg)
 })
 
-// User enters a message
-chatForm.addEventListener("submit", (e) => {
+socket.on('sourceChange', async (source) => {
+    emitter = source
+})
+
+
+
+
+
+
+// User sends a message
+function sendMessage(e) {
     e.preventDefault()
-    let destiantion = emiiter
 
     const msg = textInput.value
     if(msg === ""){
         return
     }
 
-    socket.emit(destiantion, msg)
+    console.log(emitter)
+    socket.emit(emitter, msg)
 
     const newMessage = `
         <div class="message right">
@@ -37,7 +53,8 @@ chatForm.addEventListener("submit", (e) => {
     chatMessages.innerHTML += newMessage
     textInput.value = ""
     // timeoutFunction(`A reply to ${msg}`)
-})
+}
+
 
 // Replies the user
 function chatbotReply(text){
@@ -49,6 +66,7 @@ function chatbotReply(text){
     chatMessages.innerHTML += messageReply
     chatMessages.scrollTop = chatMessages.scrollHeight
 }
+
 
 // Makes request to the backend, then calls reply function
 function timeoutFunction() {

@@ -4,6 +4,9 @@ const express = require('express')
 const socketio = require('socket.io')
 require('dotenv').config()
 
+// const library = require('./src/utils/library')
+const welcomeMessage = require('./src/utils/library')
+
 const app = express()
 const server = http.createServer(app)
 const io = socketio(server)
@@ -21,14 +24,12 @@ app.get('/2', (req, res) => {
 
 
 io.on('connection', (socket) => {
-    // socket.on('request', (msg) => {
-    //     console.log("New request: ", msg)
-    //     socket.emit('message', response(`You just typed in ${msg}`))
-    // })
+    socket.emit('message', welcomeMessage())
+    // socket.emit('sourceChange', "rating");
 
     socket.on("mainmenu", (msg) => {
         console.log("mainmenu")
-        const question =  "What can I help you with?"
+        const question =  `Okay ${msg}, What can I help you with?`
         const options = {
             1: "Place an order",
             99: "Checkout order",
@@ -39,9 +40,24 @@ io.on('connection', (socket) => {
 
         socket.emit('message', question)
         socket.emit('options', options)
+        socket.emit('sourceChange', "rating");
     })
-    // CREATE A CONNECTION FOR EACH REQUEST
-    // SOCKET.ON FOR "HOW wOULD YOU RATE OUR SERVICES"
+
+    socket.on("rating", (msg) => {
+        console.log("rating")
+        const question =  `How would you rate our services?`
+        const options = {
+            1: "Excellent",
+            2: "Good",
+            3: "Average",
+            4: "Inadequate",
+            5: "Poor"
+        }
+
+        socket.emit('message', question)
+        socket.emit('options', options)
+        socket.emit('sourceChange', "mainmenu");
+    })
 
     console.log("connection successul")
 
