@@ -7,6 +7,14 @@ const socket = io()
 chatForm.addEventListener("submit", sendMessage)
 let emitter = "mainmenu"
 
+socket.on('response', ({ question, options}) => {
+    let msg = `<p>${question}</p>`
+    Object.keys(options).forEach((option) => {
+        msg += `<li class="option">Select ${option} to ${options[option]}</li>`
+    })
+
+    chatbotReply(msg)
+})
 
 socket.on('message', (response) => {
     let msg = `<p>${response}</p>`
@@ -14,23 +22,25 @@ socket.on('message', (response) => {
     chatbotReply(msg)
 })
 
-socket.on('options', (options) => {
-    let msg = ""
-    const selection = Object.keys(options)
-    selection.forEach((val) => {
-        msg += `<li class="option">Select ${val} to ${options[val]}</li>`
-    })
-
-    chatbotReply(msg)
+socket.on('redirect', ({ text, route }) => {
+    emitter = route
+    chatbotReply(text)
 })
 
-socket.on('sourceChange', async (source) => {
-    emitter = source
-})
+// socket.on('options', (options) => {
+//     let msg = ""
+    // const selection = Object.keys(options)
+    // selection.forEach((val) => {
+    //     msg += `<li class="option">Select ${val} to ${options[val]}</li>`
+    // })
 
+//     chatbotReply(msg)
+// })
 
-
-
+// socket.on('sourceChange', (source) => {
+//     emitter = source
+//     console.log(emitter)
+// })
 
 
 // User sends a message
@@ -38,12 +48,11 @@ function sendMessage(e) {
     e.preventDefault()
 
     const msg = textInput.value
+
+    // Using regex validation!!!!!!!!!!!!!
     if(msg === ""){
         return
     }
-
-    console.log(emitter)
-    socket.emit(emitter, msg)
 
     const newMessage = `
         <div class="message right">
@@ -52,7 +61,9 @@ function sendMessage(e) {
     `
     chatMessages.innerHTML += newMessage
     textInput.value = ""
+
     // timeoutFunction(`A reply to ${msg}`)
+    socket.emit(emitter, msg)
 }
 
 

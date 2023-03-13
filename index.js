@@ -27,6 +27,7 @@ app.get('/2', (req, res) => {
 
 io.on('connection', socketHandler)
 
+
 server.listen(PORT, () => {
     console.log("Server running on port", PORT)
 })
