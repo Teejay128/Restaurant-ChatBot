@@ -9,6 +9,7 @@ let emitter = "mainmenu"
 
 socket.on('response', ({ question, options}) => {
     let msg = `<p>${question}</p>`
+
     Object.keys(options).forEach((option) => {
         msg += `<li class="option">Select ${option} to ${options[option]}</li>`
     })
@@ -24,24 +25,9 @@ socket.on('message', (response) => {
 
 socket.on('redirect', ({ text, route }) => {
     emitter = route
-    chatbotReply(text)
+    socket.emit(emitter, text)
+    // chatbotReply(text)
 })
-
-// socket.on('options', (options) => {
-//     let msg = ""
-    // const selection = Object.keys(options)
-    // selection.forEach((val) => {
-    //     msg += `<li class="option">Select ${val} to ${options[val]}</li>`
-    // })
-
-//     chatbotReply(msg)
-// })
-
-// socket.on('sourceChange', (source) => {
-//     emitter = source
-//     console.log(emitter)
-// })
-
 
 // User sends a message
 function sendMessage(e) {
@@ -49,7 +35,6 @@ function sendMessage(e) {
 
     const msg = textInput.value
 
-    // Using regex validation!!!!!!!!!!!!!
     if(msg === ""){
         return
     }

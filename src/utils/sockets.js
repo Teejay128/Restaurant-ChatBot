@@ -1,4 +1,5 @@
 const User = require('../models/userModel')
+const Order = require('../models/orderModel')
 /*
 * TODO
 * Add room functionality
@@ -7,50 +8,118 @@ const User = require('../models/userModel')
 * Should use an API for that
 */
 
+
+
 const socketHandler = (socket) => {
     socket.emit('message', `<h3>Welcome to foodGPT</h3>`)
-
-    const question =  `What can I help you with?`
-    const options = {
-        1: "Place an order",
-        99: "Checkout order",
-        98: "See order history",
-        97: "See current order",
-        0: "Cancel order"
-    }
-
-    socket.emit('response', { question, options })
-    // socket.emit('options', options)
+    socket.emit('redirect', { text: "", route: "mainmenu" })
 
     socket.on("mainmenu", (msg) => {
-        if(options[msg]) {
-            let text = options[msg]
-            let route = msg.toString()
-            socket.emit('redirect', { text, route })
+        let question =  `What can I help you with?`
+        let options = {
+            1: "Place an order",
+            99: "Checkout order",
+            98: "See order history",
+            97: "See current order",
+            0: "Cancel order"
+        }
+
+        if(!msg) {
+            socket.emit('response', { question, options })
         } else {
-            socket.emit('message', "Please select a valid option:")
+            if(options[msg]) {
+                let text = options[msg]
+                let route = msg.toString()
+                socket.emit('redirect', { text, route })
+            } else {
+                socket.emit('message', "Please select a valid option")
+            }
         }
     })
 
-
     socket.on("1", (msg) => {
-        socket.emit('message', msg)
+        let question = msg
+        let options = {
+            1: "Place an order",
+            99: "Checkout order",
+            98: "See order history",
+            97: "See current order",
+            0: "Cancel order"
+        }
+        if(!msg) {
+            socket.emit('response', {question, options })
+        } else {
+            socket.emit('message', question)
+            socket.emit('redirect', { text: "", route: "mainmenu"})
+        }
     })
 
     socket.on("99", (msg) => {
-        socket.emit('message', msg)
+        let question = msg
+        let options = {
+            1: "Place an order",
+            99: "Checkout order",
+            98: "See order history",
+            97: "See current order",
+            0: "Cancel order"
+        }
+        if(!msg) {
+            socket.emit('response', {question, options })
+        } else {
+            socket.emit('message', question)
+            socket.emit('redirect', { text: "", route: "mainmenu"})
+        }
     })
 
     socket.on("98", (msg) => {
-        socket.emit('message', msg)
+        let question = msg
+        let options = {
+            1: "Place an order",
+            99: "Checkout order",
+            98: "See order history",
+            97: "See current order",
+            0: "Cancel order"
+        }
+        if(!msg) {
+            socket.emit('response', {question, options })
+        } else {
+            socket.emit('message', question)
+            socket.emit('redirect', { text: "", route: "mainmenu"})
+        }
     })
 
     socket.on("97", (msg) => {
-        socket.emit('message', msg)
+        let question = msg
+        let options = {
+            1: "Place an order",
+            99: "Checkout order",
+            98: "See order history",
+            97: "See current order",
+            0: "Cancel order"
+        }
+        if(!msg) {
+            socket.emit('response', {question, options })
+        } else {
+            socket.emit('message', question)
+            socket.emit('redirect', { text: "", route: "mainmenu"})
+        }
     })
 
     socket.on("0", (msg) => {
-        socket.emit('message', msg)
+        let question = msg
+        let options = {
+            1: "Place an order",
+            99: "Checkout order",
+            98: "See order history",
+            97: "See current order",
+            0: "Cancel order"
+        }
+        if(!msg) {
+            socket.emit('response', {question, options })
+        } else {
+            socket.emit('message', question)
+            socket.emit('redirect', { text: "", route: "mainmenu"})
+        }
     })
 
 
