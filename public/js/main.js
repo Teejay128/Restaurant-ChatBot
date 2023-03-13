@@ -13,6 +13,7 @@ socket.on('response', ({ question, options}) => {
     Object.keys(options).forEach((option) => {
         msg += `<li class="option">Select ${option} to ${options[option]}</li>`
     })
+    msg += `<li class="option">Select 100 to Go to main menu</li>`
 
     chatbotReply(msg)
 })

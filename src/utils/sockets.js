@@ -27,10 +27,13 @@ const socketHandler = (socket) => {
         if(!msg) {
             socket.emit('response', { question, options })
         } else {
-            if(options[msg]) {
+            if(msg == 100){
+                socket.emit('message', "Main menu:")
+                socket.emit('redirect', { text: "", route: "mainmenu"})
+            } else if(options[msg]) {
                 let text = options[msg]
                 let route = msg.toString()
-                socket.emit('redirect', { text, route })
+                socket.emit('redirect', { text: "", route })
             } else {
                 socket.emit('message', "Please select a valid option")
             }
@@ -38,87 +41,29 @@ const socketHandler = (socket) => {
     })
 
     socket.on("1", (msg) => {
-        let question = msg
+        let question = "Placing An Order:"
         let options = {
-            1: "Place an order",
-            99: "Checkout order",
-            98: "See order history",
-            97: "See current order",
-            0: "Cancel order"
+            1: "Choose Egg dishes",
+            2: "Choose Meat dishes",
+            3: "Choose Fish dishes",
+            4: "Choose Vegetable dishes",
+            5: "Choose Fruit dishes",
         }
-        if(!msg) {
-            socket.emit('response', {question, options })
-        } else {
-            socket.emit('message', question)
-            socket.emit('redirect', { text: "", route: "mainmenu"})
-        }
-    })
 
-    socket.on("99", (msg) => {
-        let question = msg
-        let options = {
-            1: "Place an order",
-            99: "Checkout order",
-            98: "See order history",
-            97: "See current order",
-            0: "Cancel order"
-        }
         if(!msg) {
-            socket.emit('response', {question, options })
+            socket.emit('response', { question, options })
         } else {
-            socket.emit('message', question)
-            socket.emit('redirect', { text: "", route: "mainmenu"})
-        }
-    })
+            if(msg == 100) {
+                socket.emit('message', "Main menu:")
+                socket.emit('redirect', { text: "", route: "mainmenu"})
+            } else if(options[msg]) {
+                // TODO: SWITCH STATEMENT TO HANDLE EACH OPTION
+                socket.emit('message', options[msg])
+                // socket.emit('message', question)
+            } else {
+                socket.emit('message', "Please select a valid option")
+            }
 
-    socket.on("98", (msg) => {
-        let question = msg
-        let options = {
-            1: "Place an order",
-            99: "Checkout order",
-            98: "See order history",
-            97: "See current order",
-            0: "Cancel order"
-        }
-        if(!msg) {
-            socket.emit('response', {question, options })
-        } else {
-            socket.emit('message', question)
-            socket.emit('redirect', { text: "", route: "mainmenu"})
-        }
-    })
-
-    socket.on("97", (msg) => {
-        let question = msg
-        let options = {
-            1: "Place an order",
-            99: "Checkout order",
-            98: "See order history",
-            97: "See current order",
-            0: "Cancel order"
-        }
-        if(!msg) {
-            socket.emit('response', {question, options })
-        } else {
-            socket.emit('message', question)
-            socket.emit('redirect', { text: "", route: "mainmenu"})
-        }
-    })
-
-    socket.on("0", (msg) => {
-        let question = msg
-        let options = {
-            1: "Place an order",
-            99: "Checkout order",
-            98: "See order history",
-            97: "See current order",
-            0: "Cancel order"
-        }
-        if(!msg) {
-            socket.emit('response', {question, options })
-        } else {
-            socket.emit('message', question)
-            socket.emit('redirect', { text: "", route: "mainmenu"})
         }
     })
 
