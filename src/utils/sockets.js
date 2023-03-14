@@ -15,7 +15,7 @@ const socketHandler = (socket) => {
     socket.emit('redirect', { text: "", route: "mainmenu" })
 
     socket.on("mainmenu", (msg) => {
-        let question =  `What can I help you with?`
+        let question =  `Main menu:`
         let options = {
             1: "Place an order",
             99: "Checkout order",
@@ -28,7 +28,6 @@ const socketHandler = (socket) => {
             socket.emit('response', { question, options })
         } else {
             if(msg == 100){
-                socket.emit('message', "Main menu:")
                 socket.emit('redirect', { text: "", route: "mainmenu"})
             } else if(options[msg]) {
                 let text = options[msg]
@@ -54,7 +53,6 @@ const socketHandler = (socket) => {
             socket.emit('response', { question, options })
         } else {
             if(msg == 100) {
-                socket.emit('message', "Main menu:")
                 socket.emit('redirect', { text: "", route: "mainmenu"})
             } else if(options[msg]) {
                 // TODO: SWITCH STATEMENT TO HANDLE EACH OPTION
@@ -65,6 +63,44 @@ const socketHandler = (socket) => {
             }
 
         }
+    })
+
+    
+    socket.on("99", (msg) => {
+        // Find a way to check if there is a valid order
+        let order = false
+
+        let options = {
+            1: "Place an order",
+            2: "Return all placed orders",
+        }
+
+        if(order) {
+            socket.emit('message', "Order Placed, Redirecting to main menu...")
+            socket.emit('redirect', { text: "", route: "mainmenu"})
+        } else {
+            if(!msg) {
+                socket.emit('response', { question: "No order to place", options })
+            } else {
+                // SWITCH STATEMENT TO HANDLE OPTIONS
+                switch(msg) {
+                    case "1":
+                        socket.emit('redirect', { text: "", route: "1"})
+                    break;
+                    case "2":
+                        socket.emit('message', "All placed orders")
+                        // socket.emit('redirect', { text: "", route: "98"})
+                    break;
+                    case "100":
+                        socket.emit('redirect', { text: "", route: "mainmenu"})
+                    break;
+                    default:
+                        socket.emit('message', "Please select a valid option")
+                }
+    
+            }
+        }
+
     })
 
 
