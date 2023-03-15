@@ -30,8 +30,6 @@ const socketHandler = (socket) => {
             if(msg == 100){
                 socket.emit('redirect', { text: "", route: "mainmenu"})
             } else if(options[msg]) {
-                let text = options[msg]
-                console.log(text)
                 let route = msg.toString()
                 socket.emit('redirect', { text: "", route })
             } else {
@@ -39,6 +37,7 @@ const socketHandler = (socket) => {
             }
         }
     })
+
 
     socket.on("1", (msg) => {
         let question = "Placing An Order:"
@@ -111,6 +110,37 @@ const socketHandler = (socket) => {
                 }
     
             }
+        }
+
+    })
+
+    
+    socket.on("98", (msg) => {
+        // Check if there are any orders
+        let orders = true
+
+        // Orders should be returned as options
+        let options = {
+            1: "View Egg dishes",
+            2: "View Meat dishes",
+            3: "View Fish dishes",
+            4: "View Vegetable dishes",
+            5: "View Fruit dishes",
+        }
+
+        if(orders) {
+            if(!msg) {
+                socket.emit('response', { question: "All placed orders", options })
+            } else if(options[msg]){
+                socket.emit('message', options[msg])
+            } else if(msg == 100) {
+                socket.emit('redirect', { text: "", route: "mainmenu"})
+            } else {
+                socket.emit('message', "Please select a valid option")
+            }
+        } else {
+            socket.emit('message', "There are no placed orders, Redirecting to main menu...")
+            socket.emit('redirect', { text: "", route: "mainmenu"})
         }
 
     })
