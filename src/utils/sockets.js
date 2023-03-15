@@ -144,6 +144,28 @@ const socketHandler = (socket) => {
         }
 
     })
+    
+    socket.on("97", (msg) => {
+        // If the order exists
+        // order should equal orders[msg]
+
+        let order = true
+        let options = {
+            1: "Checkout order",
+            2: "View all orders",
+        }
+
+        // Orders should be returned as options
+
+        if(order) {
+            socket.emit('message', "This is your order")
+            socket.emit('response', { question: "What would you like to do next?", options })
+        } else {
+            socket.emit('message', "There is no current order, Please place an order")
+            socket.emit('redirect', { text: "", route: "mainmenu"})
+        }
+
+    })
 
     
     socket.on("0", (msg) => {
