@@ -1,5 +1,6 @@
 const User = require('../models/userModel')
 const Order = require('../models/orderModel')
+
 /*
 * TODO
 * Add room functionality
@@ -7,7 +8,6 @@ const Order = require('../models/orderModel')
 * Different languages or styles
 * Should use an API for that
 */
-
 
 
 const socketHandler = (socket) => {
@@ -31,6 +31,7 @@ const socketHandler = (socket) => {
                 socket.emit('redirect', { text: "", route: "mainmenu"})
             } else if(options[msg]) {
                 let text = options[msg]
+                console.log(text)
                 let route = msg.toString()
                 socket.emit('redirect', { text: "", route })
             } else {
@@ -51,17 +52,30 @@ const socketHandler = (socket) => {
 
         if(!msg) {
             socket.emit('response', { question, options })
-        } else {
-            if(msg == 100) {
-                socket.emit('redirect', { text: "", route: "mainmenu"})
-            } else if(options[msg]) {
-                // TODO: SWITCH STATEMENT TO HANDLE EACH OPTION
-                socket.emit('message', options[msg])
-                // socket.emit('message', question)
-            } else {
-                socket.emit('message', "Please select a valid option")
+        } else if (options[msg]){
+            switch(msg) {
+                case "1":
+                    socket.emit("message", options[1])
+                    break;
+                case "2":
+                    socket.emit("message", options[2])
+                    break;
+                case "3":
+                    socket.emit("message", options[3])
+                    break;
+                case "4":
+                    socket.emit("message", options[4])
+                    break;
+                case "5":
+                    socket.emit("message", options[5])
+                    break;
+                default:
+                    console.log("The thing is not thinging")
             }
-
+        } else if(msg == 100) {
+            socket.emit('redirect', { text: "", route: "mainmenu"})
+        } else {
+            socket.emit('message', "Please select a valid option")
         }
     })
 
@@ -82,18 +96,47 @@ const socketHandler = (socket) => {
             if(!msg) {
                 socket.emit('response', { question: "No order to place", options })
             } else {
-                // SWITCH STATEMENT TO HANDLE OPTIONS
                 switch(msg) {
                     case "1":
                         socket.emit('redirect', { text: "", route: "1"})
-                    break;
+                        break;
                     case "2":
-                        socket.emit('message', "All placed orders")
-                        // socket.emit('redirect', { text: "", route: "98"})
-                    break;
+                        socket.emit('redirect', { text: "", route: "98"})
+                        break;
                     case "100":
                         socket.emit('redirect', { text: "", route: "mainmenu"})
-                    break;
+                        break;
+                    default:
+                        socket.emit('message', "Please select a valid option")
+                }
+    
+            }
+        }
+
+    })
+
+    
+    socket.on("0", (msg) => {
+        // Find a way to check if there are any orders
+        let orders = false
+
+        let options = {
+            1: "Place a new order",
+        }
+
+        if(orders) {
+            socket.emit('response', { question: "Your Order has been cancelled, what would you like to do", options })
+        } else {
+            if(!msg) {
+                socket.emit('response', { question: "There are no orders to cancel", options })
+            } else {
+                switch(msg) {
+                    case "1":
+                        socket.emit('redirect', { text: "", route: "1"})
+                        break;
+                    case "100":
+                        socket.emit('redirect', { text: "", route: "mainmenu"})
+                        break;
                     default:
                         socket.emit('message', "Please select a valid option")
                 }
@@ -105,18 +148,43 @@ const socketHandler = (socket) => {
 
 
     socket.on("rating", (msg) => {
-        const question =  `How would you rate our services?`
-        const options = {
+        let question =  `How would you rate our services?`
+        let options = {
             1: "Excellent",
             2: "Good",
             3: "Average",
             4: "Inadequate",
             5: "Poor"
         }
-        
-        socket.emit('message', question)
-        socket.emit('options', options)
-        socket.emit('sourceChange', "mainmenu");
+
+        if(!msg) {
+            socket.emit('response', { question, options })
+        } else if (options[msg]){
+            switch(msg) {
+                case "1":
+                    socket.emit("message", options[1])
+                    break;
+                case "2":
+                    socket.emit("message", options[2])
+                    break;
+                case "3":
+                    socket.emit("message", options[3])
+                    break;
+                case "4":
+                    socket.emit("message", options[4])
+                    break;
+                case "5":
+                    socket.emit("message", options[5])
+                    break;
+                case "100":
+                    socket.emit('redirect', { text: "", route: "mainmenu"})
+                    break;
+                default:
+                    console.log("The thing is not thinging")
+            }
+        } else {
+            socket.emit('message', "Please select a valid option")
+        }
     })
 
     console.log("connection successul")
