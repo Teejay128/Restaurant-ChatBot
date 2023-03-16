@@ -7,27 +7,25 @@ const socket = io()
 chatForm.addEventListener("submit", sendMessage)
 let emitter = "mainmenu"
 
-socket.on('response', ({ question, options}) => {
+socket.on('message', (question) => {
     let msg = `<p>${question}</p>`
 
+    chatbotReply(msg)
+})
+
+socket.on('options', (options) => {
+    let msg = ""
+
     Object.keys(options).forEach((option) => {
-        msg += `<li class="option">Select ${option} to ${options[option]}</li>`
+        msg += `<li class="option">Enter ${option} to ${options[option]}</li>`
     })
 
-    msg += `<li class="option">Select 100 to Go to main menu</li>`
-
     chatbotReply(msg)
 })
 
-socket.on('message', (response) => {
-    let msg = `<p>${response}</p>`
-
-    chatbotReply(msg)
-})
-
-socket.on('redirect', ({ text, route }) => {
+socket.on('redirect', (route) => {
     emitter = route
-    socket.emit(emitter, text)
+    socket.emit(emitter, "")
     // chatbotReply(text)
 })
 
@@ -36,8 +34,15 @@ function sendMessage(e) {
     e.preventDefault()
 
     const msg = textInput.value
+    textInput.value = ""
 
-    if(msg === ""){
+    if(msg === "") {
+        return
+    }
+
+    if (msg === 100) {
+        emitter = "mainmenu"
+        socket.emit(emitter, "")
         return
     }
 
@@ -46,11 +51,13 @@ function sendMessage(e) {
             <p>${msg}</p>
         </div>
     `
+    
     chatMessages.innerHTML += newMessage
-    textInput.value = ""
+    chatMessages.scrollTop = chatMessages.scrollHeight
 
     // timeoutFunction(`A reply to ${msg}`)
     socket.emit(emitter, msg)
+    console.log(emitter)
 }
 
 

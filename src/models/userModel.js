@@ -4,18 +4,17 @@ const Order = require('./orderModel')
 const Schema = mongoose.Schema
 
 const userSchema = new Schema({
-    name: {
-        type: String,
-        required: true
-    },
+    // name: {
+    //     type: String,
+    //     required: true
+    // },
     id: {
         type: String,
         required: true
     },
-    orders: [{
-        type: Schema.Types.ObjectId,
-        ref: Order
-    }]
+    orders: {
+        type: Array
+    }
 })
 
 const User = mongoose.model('user', userSchema)
