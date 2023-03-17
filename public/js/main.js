@@ -1,14 +1,19 @@
 const chatMessages = document.querySelector('.chat')
+const loginForm = document.querySelector('#login_form')
 const chatForm = document.querySelector('#message_form')
 const textInput = document.querySelector('.text_input')
+const nameInput = document.querySelector('.name_input')
 
 
 const socket = io()
-chatForm.addEventListener("submit", sendMessage)
+
 let emitter = "mainmenu"
+loginForm.addEventListener("submit", newUser)
+chatForm.addEventListener("submit", sendMessage)
+
 
 socket.on('message', (question) => {
-    let msg = `<p>${question}</p>`
+    let msg = `${question}`
 
     chatbotReply(msg)
 })
@@ -29,6 +34,18 @@ socket.on('redirect', (route) => {
     // chatbotReply(text)
 })
 
+
+function newUser(e) {
+    e.preventDefault()
+
+    chatMessages.innerHTML = ""
+    loginForm.style.display = "none"
+    chatForm.style.display = "block"
+    let username = nameInput.value
+
+    socket.emit('startChat', username)
+}
+
 // User sends a message
 function sendMessage(e) {
     e.preventDefault()
@@ -39,6 +56,7 @@ function sendMessage(e) {
     if(msg === "") {
         return
     }
+
 
     if (msg === 100) {
         emitter = "mainmenu"
@@ -57,7 +75,6 @@ function sendMessage(e) {
 
     // timeoutFunction(`A reply to ${msg}`)
     socket.emit(emitter, msg)
-    console.log(emitter)
 }
 
 

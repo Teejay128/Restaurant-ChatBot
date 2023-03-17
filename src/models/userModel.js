@@ -4,10 +4,10 @@ const Order = require('./orderModel')
 const Schema = mongoose.Schema
 
 const userSchema = new Schema({
-    // name: {
-    //     type: String,
-    //     required: true
-    // },
+    name: {
+        type: String,
+        required: true
+    },
     id: {
         type: String,
         required: true

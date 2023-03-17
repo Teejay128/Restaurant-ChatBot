@@ -11,13 +11,19 @@
 
 
 const socketHandler = (socket) => {
-    socket.emit('message', `<h3>Welcome to foodGPT</h3>`)
-    socket.emit('redirect', "mainmenu")
+    socket.on('startChat', (username) => {
+        
+        const user = {
+            name: username,
+            id: socket.id,
+            orders: []
+        }
 
-    const user = {
-        id: socket.id,
-        orders: []
-    }
+        console.log(user)
+        console.log("Bot is starting")
+        socket.emit('redirect', "mainmenu")
+    })
+    
 
     socket.on("mainmenu", (msg) => {
         let question =  `Main menu:`
