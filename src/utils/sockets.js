@@ -50,108 +50,11 @@ const socketHandler = (socket) => {
 
 
     socket.on("1", (msg) => {
-        let question = "Place An Order:"
-        let divider = " to select"
         // There should be an option that redirects to 99, to checkout an order
         // Orders should be present here
         // Maybe an option to view menu list?
-        let options = {
-            1: "Egg dish",
-            2: "Meat dish",
-            3: "Fish dish",
-            4: "Vegetable dish",
-            5: "Fruit dish",
-        }
-
-        if(!msg) {
-            socket.emit('message', question)
-            socket.emit('options', { options, divider })
-            return
-        }
-
-        if(!options[msg]) {
-            socket.emit('message', "Please enter a valid option")
-            return
-        }
-
-        // Emit some details about the dish "Route 97", and current order and stuff
-        socket.emit('redirect', { route: "97", text: msg })
-        user.orders.push(options[msg])
-
-    })
-
-    
-    socket.on("99", (msg) => {
-        // Find a way to check if there is a valid order
-        // let order = false
-
-        let question = "No order to place"
-        let divider = "to"
-        let options = {
-            1: "Place an order",
-        }
-
-
-        if(user.orders.length) {
-            // Give more info about the order
-            socket.emit('message', "Order Placed")
-            socket.emit('options', { options, divider })
-            return
-        } 
-    
-        if(!msg) {
-            socket.emit('message', question)
-            socket.emit('options', { options, divider })
-            return
-        }
-        
-        if(!options[msg]) {
-            socket.emit('message', "Please enter a valid option")
-            return
-        }
-        
-        socket.emit('redirect', { route: msg, text: "" })
-        socket.emit('message', `${options[msg]} has been added to your order`)
-
-    })
-
-    
-    socket.on("98", (msg) => {
-        let orders = { ...user.orders }
-        let question = "All placed orders"
-        let divider = "to view"
-        let options = {
-            1: "Egg dishes",
-            2: "Meat dishes",
-            3: "Fish dishes",
-            4: "Vegetable dishes",
-            5: "Fruit dishes",
-        }
-        console.log(orders)
-
-        if(!orders) {
-            socket.emit('message', "There are no placed orders")
-            socket.emit('redirect', { route: "mainmenu", text: "" })
-            return
-        }
-
-        if(!msg) {
-            socket.emit('message', question)
-            socket.emit('options', { orders, divider })
-            return
-        }
-
-        if(!options[msg]) {
-            socket.emit('message', "Please enter a valid option")
-            return
-        }
-
-        socket.emit('message', options[msg])
-
-    })
-    
-    socket.on("97", (msg) => {
-
+        let question = "Place An Order:"
+        let divider = " to order"
         let orders = {
             1: "Egg dish",
             2: "Meat dish",
@@ -160,46 +63,161 @@ const socketHandler = (socket) => {
             5: "Fruit dish",
         }
 
-        let divider = "to"
         let options = {
+            "1 - 5": "Place another order",
+            98: "View all orders",
             99: "Checkout order",
-            0: "Cancel order",
+            0: "Cancel order"
         }
 
+        if(!msg) {
+            socket.emit('message', question)
+            socket.emit('options', { options: orders, divider })
+            return
+        }
+
+        if(options[msg]) {
+            socket.emit('redirect', { route: msg, text: ""})
+            return
+        }
+
+        if(!orders[msg]) {
+            socket.emit('message', "Please enter a valid option")
+            return
+        }
+
+        // Emit some details about the dish "Route 97", and current order and stuff
+        socket.emit('message', `${orders[msg]} has been added to your orders`)
+        socket.emit('options', { options, divider: "to" })
+        user.orders.push(orders[msg])
+
+    })
+
+    
+    socket.on("99", (msg) => {
+        let orders = user.orders
+
+        let question = "Order placed"
+        let divider = "to"
+        let options = {
+            1: "Place an order",
+        }
+
+        // Refactor this stuff
+        if(msg == 1) {
+            socket.emit('redirect', { route: msg, text: "" })
+            return
+        }
+
+        if(msg != "") {
+            socket.emit('message', "Please enter a valid option")
+            return
+        }
+
+        if(!orders.length) {
+            socket.emit('message', "No order to place")
+            socket.emit('options', { options, divider })
+            return
+        }
+
+        socket.emit('message', question)
+        socket.emit('redirect', { route: "mainmenu", text: ""})
+    })
+
+    
+    socket.on("98", (msg) => {
+        let orders
+        let question = "All placed orders"
+        let divider = "to view"
+        // let options = {
+        //     1: "Place an order",
+        //     99: "Checkout order"
+        // }
+
+        if(user.orders.length) {
+            orders = {...user.orders}
+        }
+
+        if(!orders) {
+            socket.emit('message', "There are no placed orders")
+            socket.emit('redirect', { route: "1", text: "" })
+            return
+        }
+
+        if(!msg) {
+            socket.emit('message', question)
+            socket.emit('options', { options: orders, divider })
+            return
+        }
         
+        // if(options[msg]) {
+        //     socket.emit('redirect', ({ route: msg, text: "" }))
+        //     return
+        // }
+        
+        if(orders[msg]) {
+            socket.emit('redirect', ({ route: "97", text: orders[msg]}))
+            return
+        }
+        
+        socket.emit('message', "Please enter a valid option")
+
+    })
+
+    
+    socket.on("97", (msg) => {
+        console.log("view current")
+        let divider = "to"
+        let options = {
+            1: "Place another order",
+            99: "Checkout order",
+            // 0: "Cancel order",
+        }
+
         if(!msg) {
             socket.emit('message', "There is no current order")
             socket.emit('redirect', { route: "1", text: "" })
             return
         }
-        
-        if(orders[msg]) {
-            let order = orders[msg]
-            // Switch statement for each dish, and additional details
-            socket.emit('message', `This is the ${order}`)
-            socket.emit('options', { options, divider })
-            return
-        }
 
         if(options[msg]) {
-            console.log(options[msg])
-            socket.emit('redirect', { route: msg, text: options[msg]})
+            socket.emit('redirect', { route: msg, text: ""})
             return
         }
 
-        socket.emit('message', "Please enter a valid option")
+        // SWITCH STATEMENT FOR THE FIVE DISHES
+        switch(msg) {
+            case "Egg dish":
+                socket.emit('message', "This dish is made with eggs and is very fantabulous")
+                break;
+            case "Meat dish":
+                socket.emit('message', "This dish is made with meat and is very fantabulous")
+                break;
+            case "Fish dish":
+                socket.emit('message', "This dish is made with fish and is very fantabulous")
+                break;
+            case "Vegetable dish":
+                socket.emit('message', "This dish is made with vegetables and is very fantabulous")
+                break;
+            case "Fruit dish":
+                socket.emit('message', "This dish is made with fruits and is very fantabulous")
+                break;
+            default:
+                socket.emit('message', "Please enter a valid option")
+        }
+            
+        socket.emit('options', { options, divider })
     })
 
     
     socket.on("0", (msg) => {
-        // Find a way to check if there are any orders
-        let orders = false
         let divider = "to"
         let options = {
             1: "Place a new order",
         }
 
-        if(orders) {
+        if(user.orders.length) {
+            user.orders = []
             socket.emit('message', "Your Order has been cancelled")
             socket.emit('options', { options, divider })
             return
@@ -209,18 +227,15 @@ const socketHandler = (socket) => {
             socket.emit('message', "There are no orders to cancel")
             socket.emit('options', { options, divider })
             return
-        } 
-            
-        switch(msg) {
-            case "1":
-                socket.emit('redirect', { route: "1", text: "" })
-                break;
-            case "100":
-                socket.emit('redirect', { route: "mainmenu", text: "" })
-                break;
-            default:
-                socket.emit('message', "Please enter a valid option")
         }
+
+        if(options[msg]) {
+            socket.emit('message', "There are no orders to cancel")
+            socket.emit('redirect', { route: msg, text: ""})
+            return
+        }
+
+        socket.emit('message', "Please enter a valid option")
 
     })
 
