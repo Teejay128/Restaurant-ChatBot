@@ -1,48 +1,47 @@
 const path = require('path')
-const http = require('http')
 const express = require('express')
+const { createServer } = require('http')
 const socketio = require('socket.io')
-const jwt = require('jsonwebtoken')
-const cookieParser = require('cookie-parser')
+const session = require('express-session')
+// const bodyParser = require('body-parser')
 require('dotenv').config()
 
-const verifyToken = require('./src/utils/middleware')
 const socketHandler = require('./src/utils/sockets')
 
 const app = express()
-const server = http.createServer(app)
-const io = socketio(server)
-const PORT = process.env.PORT || 4000
+const httpServer = createServer(app)
+const io = socketio(httpServer)
+const PORT = process.env.PORT || 3000
+const sessionMiddleware = session({
+    secret: process.env.SECRET_KEY,
+    resave: false,
+    saveUninitialized: false
+})
 
-
-app.use(cookieParser())
+app.use(express.urlencoded({ extended: false }))
+app.use(express.json())
 app.use(express.static(path.join(__dirname, 'public')))
+app.use(sessionMiddleware)
 
-
-app.post('/login', (req, res) => {
-    const username = req.body
-    console.log(username)
-
-    // if(isAuthenticated(username)) {
-    //     const token = jwt.sign({ username }, process.env.SECRET_KEY)
-
-    //     res.cookie('jwt', token, { httpOnly: true })
-
-    //     res.send("You have been logged in")
-    // } else {
-    //     res.status(401).send("Credentials are invalid")
-    // }
+app.post("/login", (req, res) => {
+    req.session.authenticated = true
+    res.status(204).end()
 })
 
-app.get('/chat', verifyToken, (req, res) => {
-    const username = req.user
 
-    res.send(`Welcome, ${username}`)
-})
+// const wrap = middleware => (socket, next) => middleware(socket.request, {}, next)
+// io.use(wrap(sessionMiddleware))
+// io.use((socket, next) => {
+//     const session = socket.request.session
+//     if(session && session.authenticated) {
+//         next()
+//     } else {
+//         next(new Error("Unauthorized"))
+//     }
+// })
 
-io.on('connection', socketHandler)
+io.on("connection", socketHandler)
 
-
-server.listen(PORT, () => {
+httpServer.listen(PORT, () => {
     console.log("Server running on port", PORT)
 })

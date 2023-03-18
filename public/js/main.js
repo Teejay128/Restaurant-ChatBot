@@ -18,19 +18,19 @@ socket.on('message', (question) => {
     chatbotReply(msg)
 })
 
-socket.on('options', (options) => {
+socket.on('options', ({ options, divider }) => {
     let msg = ""
 
     Object.keys(options).forEach((option) => {
-        msg += `<li class="option">Enter ${option} to ${options[option]}</li>`
+        msg += `<li class="option">Enter ${option} ${divider} ${options[option]}</li>`
     })
 
     chatbotReply(msg)
 })
 
-socket.on('redirect', (route) => {
+socket.on('redirect', ({ route, text }) => {
     emitter = route
-    socket.emit(emitter, "")
+    socket.emit(emitter, text)
     // chatbotReply(text)
 })
 
@@ -43,6 +43,18 @@ function newUser(e) {
     chatForm.style.display = "block"
     let username = nameInput.value
 
+    // Function to make a post request to the login whatever
+
+    // fetch("/login", {
+    //     method: "POST",
+    //     body: JSON.stringify("Request body object"),
+    //     headers: {
+    //         "Content-type": "application/json;"
+    //     }
+    // })
+    // .then(() => console.log("You should get response"))
+    // .catch((err) => console.log("Error: ", err))
+
     socket.emit('startChat', username)
 }
 
@@ -52,16 +64,15 @@ function sendMessage(e) {
 
     const msg = textInput.value
     textInput.value = ""
-
     if(msg === "") {
         return
     }
 
-
-    if (msg === 100) {
+    if (msg == 100) {
         emitter = "mainmenu"
         socket.emit(emitter, "")
-        return
+    } else {
+        socket.emit(emitter, msg)
     }
 
     const newMessage = `
@@ -74,7 +85,6 @@ function sendMessage(e) {
     chatMessages.scrollTop = chatMessages.scrollHeight
 
     // timeoutFunction(`A reply to ${msg}`)
-    socket.emit(emitter, msg)
 }
 
 
