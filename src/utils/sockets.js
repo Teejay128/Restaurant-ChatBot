@@ -50,22 +50,19 @@ const socketHandler = (socket) => {
 
 
     socket.on("1", (msg) => {
-        // There should be an option that redirects to 99, to checkout an order
-        // Orders should be present here
-        // Maybe an option to view menu list?
         let question = "Place An Order:"
         let divider = " to order"
         let orders = {
-            1: "Egg dish",
-            2: "Meat dish",
-            3: "Fish dish",
-            4: "Vegetable dish",
-            5: "Fruit dish",
+            1: "Shakshuka",
+            2: "Stroganoff",
+            3: "Grilled Salmon",
+            4: "Ratatouille",
+            5: "Fruit Salad",
         }
 
         let options = {
             "1 - 5": "Place another order",
-            98: "View all orders",
+            98: "View your orders",
             99: "Checkout order",
             0: "Cancel order"
         }
@@ -166,7 +163,6 @@ const socketHandler = (socket) => {
 
     
     socket.on("97", (msg) => {
-        console.log("view current")
         let divider = "to"
         let options = {
             1: "Place another order",
@@ -187,20 +183,20 @@ const socketHandler = (socket) => {
 
         // SWITCH STATEMENT FOR THE FIVE DISHES
         switch(msg) {
-            case "Egg dish":
-                socket.emit('message', "This dish is made with eggs and is very fantabulous")
+            case "Shakshuka":
+                socket.emit('message', "Shashuka is a popular North African and Middle Eastern dish made with eggs poached in a spicy tomato sauce with onions, peppers, and garlic")
                 break;
-            case "Meat dish":
-                socket.emit('message', "This dish is made with meat and is very fantabulous")
+            case "Stroganoff":
+                socket.emit('message', "Stroganoff is a Russian dish made with tender strips of beef cooked in a creamy sauce with mushrooms, onions, and sour cream.")
                 break;
-            case "Fish dish":
-                socket.emit('message', "This dish is made with fish and is very fantabulous")
+            case "Grilled Salmon":
+                socket.emit('message', "Grilled Salmon is a simple and healthy dish made with fresh salmon fillets grilled to perfection and seasoned with lemon, garlic, and herbs.")
                 break;
-            case "Vegetable dish":
-                socket.emit('message', "This dish is made with vegetables and is very fantabulous")
+            case "Ratatouille":
+                socket.emit('message', "Ratatouille is a classic French dish made with eggplant, zucchini, bell peppers, onions, and tomatoes stewed in olive oil and seasoned with herbs.")
                 break;
-            case "Fruit dish":
-                socket.emit('message', "This dish is made with fruits and is very fantabulous")
+            case "Fruit Salad":
+                socket.emit('message', "Fruit Salad is a refreshing and colorful dish made with a variety of fresh fruits, such as strawberries, blueberries, kiwi, mango, and pineapple, served with a light dressing made with honey and lime juice.")
                 break;
             default:
                 socket.emit('message', "Please enter a valid option")

@@ -23,11 +23,10 @@ app.use(express.json())
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(sessionMiddleware)
 
-app.post("/login", (req, res) => {
-    req.session.authenticated = true
-    res.status(204).end()
-})
-
+// app.post("/login", (req, res) => {
+//     req.session.authenticated = true
+//     res.status(204).end()
+// })
 
 // const wrap = middleware => (socket, next) => middleware(socket.request, {}, next)
 // io.use(wrap(sessionMiddleware))

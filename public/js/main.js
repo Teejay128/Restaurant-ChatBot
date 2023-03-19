@@ -43,18 +43,6 @@ function newUser(e) {
     chatForm.style.display = "block"
     let username = nameInput.value
 
-    // Function to make a post request to the login whatever
-
-    // fetch("/login", {
-    //     method: "POST",
-    //     body: JSON.stringify("Request body object"),
-    //     headers: {
-    //         "Content-type": "application/json;"
-    //     }
-    // })
-    // .then(() => console.log("You should get response"))
-    // .catch((err) => console.log("Error: ", err))
-
     socket.emit('startChat', username)
 }
 
