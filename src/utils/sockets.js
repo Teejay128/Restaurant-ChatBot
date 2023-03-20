@@ -17,7 +17,7 @@ const socketHandler = (socket) => {
         user.name = username
         user.id = socket.id
         user.orders = []
-
+        // socket.emit(`Hi ${user.name}, you are being redirected to the main menu`)
         socket.emit('redirect', { route: "mainmenu", text: "" })
     })
     
@@ -117,7 +117,10 @@ const socketHandler = (socket) => {
             return
         }
 
+        // You also need to wipe the memory of the entire order
         socket.emit('message', question)
+        // Emit the order to them, also give details about time and date of delivery and other bullshit
+        // Give them options to rate us, go to main menu, or place a new order
         socket.emit('redirect', { route: "mainmenu", text: ""})
     })
 
@@ -142,7 +145,7 @@ const socketHandler = (socket) => {
         }
 
         if(!msg) {
-            socket.emit('message', question)
+            socket.emit('message', `All placed orders - (${user.orders.length})`)
             socket.emit('options', { options: orders, divider })
             return
         }
@@ -226,7 +229,6 @@ const socketHandler = (socket) => {
         }
 
         if(options[msg]) {
-            socket.emit('message', "There are no orders to cancel")
             socket.emit('redirect', { route: msg, text: ""})
             return
         }

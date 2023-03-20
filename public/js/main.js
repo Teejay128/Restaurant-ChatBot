@@ -42,6 +42,8 @@ function newUser(e) {
     loginForm.style.display = "none"
     chatForm.style.display = "block"
     let username = nameInput.value
+    let msg = `Hi ${username}, you are being redirected to the main menu`
+    chatbotReply(msg)
 
     socket.emit('startChat', username)
 }
@@ -72,6 +74,7 @@ function sendMessage(e) {
     chatMessages.innerHTML += newMessage
     chatMessages.scrollTop = chatMessages.scrollHeight
 
+    startLoading()
     // timeoutFunction(`A reply to ${msg}`)
 }
 
@@ -83,6 +86,8 @@ function chatbotReply(text){
             ${text}
         </div>
     `
+
+    endLoading()
     chatMessages.innerHTML += messageReply
     chatMessages.scrollTop = chatMessages.scrollHeight
 }
@@ -91,4 +96,20 @@ function chatbotReply(text){
 // Makes request to the backend, then calls reply function
 function timeoutFunction() {
     // this handles message loader and other functionality for delivering response
+}
+
+function startLoading() {
+    const messageReply = `
+        <div class="message left" id="loading">
+            <p>...</p>
+        </div>
+    `
+    chatMessages.innerHTML += messageReply
+}
+
+function endLoading() {
+    let loader = document.querySelector('#loading')
+    if(loader) {
+        loader.remove()
+    }
 }
