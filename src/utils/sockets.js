@@ -17,14 +17,13 @@ const socketHandler = (socket) => {
         user.name = username
         user.id = socket.id
         user.orders = []
-        // socket.emit(`Hi ${user.name}, you are being redirected to the main menu`)
+
+        socket.emit(`Hi ${user.name}, welcome to the world's first unintelligent food service chatbot`)
         socket.emit('redirect', { route: "mainmenu", text: "" })
     })
     
     
     socket.on("mainmenu", (msg) => {
-        let question =  `Main menu:`
-        let divider = "to"
         let options = {
             1: "Place an order",
             99: "Checkout order",
@@ -34,8 +33,8 @@ const socketHandler = (socket) => {
         }
 
         if(!msg) {
-            socket.emit('message', question)
-            socket.emit('options', { options, divider })
+            socket.emit('message', "Mainmenu")
+            socket.emit('options', { options, divider: "to" })
             return
         }
 
@@ -50,8 +49,6 @@ const socketHandler = (socket) => {
 
 
     socket.on("1", (msg) => {
-        let question = "Place An Order:"
-        let divider = " to order"
         let orders = {
             1: "Shakshuka",
             2: "Stroganoff",
@@ -68,8 +65,8 @@ const socketHandler = (socket) => {
         }
 
         if(!msg) {
-            socket.emit('message', question)
-            socket.emit('options', { options: orders, divider })
+            socket.emit('message', "Place an order")
+            socket.emit('options', { options: orders, divider: "to order" })
             return
         }
 
@@ -93,9 +90,6 @@ const socketHandler = (socket) => {
     
     socket.on("99", (msg) => {
         let orders = user.orders
-
-        let question = "Order placed"
-        let divider = "to"
         let options = {
             1: "Place an order",
         }
@@ -113,12 +107,12 @@ const socketHandler = (socket) => {
 
         if(!orders.length) {
             socket.emit('message', "No order to place")
-            socket.emit('options', { options, divider })
+            socket.emit('options', { options, divider: "to" })
             return
         }
 
         // You also need to wipe the memory of the entire order
-        socket.emit('message', question)
+        socket.emit('message', "order placed")
         // Emit the order to them, also give details about time and date of delivery and other bullshit
         // Give them options to rate us, go to main menu, or place a new order
         socket.emit('redirect', { route: "mainmenu", text: ""})
@@ -127,8 +121,6 @@ const socketHandler = (socket) => {
     
     socket.on("98", (msg) => {
         let orders
-        let question = "All placed orders"
-        let divider = "to view"
         // let options = {
         //     1: "Place an order",
         //     99: "Checkout order"
@@ -146,7 +138,7 @@ const socketHandler = (socket) => {
 
         if(!msg) {
             socket.emit('message', `All placed orders - (${user.orders.length})`)
-            socket.emit('options', { options: orders, divider })
+            socket.emit('options', { options: orders, divider: "to view" })
             return
         }
         
@@ -166,7 +158,6 @@ const socketHandler = (socket) => {
 
     
     socket.on("97", (msg) => {
-        let divider = "to"
         let options = {
             1: "Place another order",
             99: "Checkout order",
@@ -205,26 +196,25 @@ const socketHandler = (socket) => {
                 socket.emit('message', "Please enter a valid option")
         }
             
-        socket.emit('options', { options, divider })
+        socket.emit('options', { options, divider: "to" })
     })
 
     
     socket.on("0", (msg) => {
-        let divider = "to"
         let options = {
             1: "Place a new order",
         }
 
         if(user.orders.length) {
             user.orders = []
-            socket.emit('message', "Your Order has been cancelled")
-            socket.emit('options', { options, divider })
+            socket.emit('message', "Order cancelled")
+            socket.emit('options', { options, divider: "to" })
             return
         }
 
         if(!msg) {
             socket.emit('message', "There are no orders to cancel")
-            socket.emit('options', { options, divider })
+            socket.emit('options', { options, divider: "to" })
             return
         }
 
@@ -239,8 +229,6 @@ const socketHandler = (socket) => {
 
 
     socket.on("rating", (msg) => {
-        let question =  `How would you rate our services?`
-        let divider = "to select"
         let options = {
             1: "Excellent",
             2: "Good",
@@ -250,8 +238,8 @@ const socketHandler = (socket) => {
         }
 
         if(!msg) {
-            socket.emit('message', question)
-            socket.emit('options', { options, divider })
+            socket.emit('message', "Please rate us")
+            socket.emit('options', { options, divider: "to select" })
             return
         }
 

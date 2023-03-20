@@ -4,7 +4,6 @@ const { createServer } = require('http')
 const socketio = require('socket.io')
 const session = require('express-session')
 const MongoStore = require('connect-mongo')
-// const bodyParser = require('body-parser')
 require('dotenv').config()
 
 const socketHandler = require('./src/utils/sockets')
@@ -24,8 +23,7 @@ const sessionMiddleware = session({
     resave: false
 })
 
-// app.use(express.urlencoded({ extended: false }))
-// app.use(express.json())
+
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(sessionMiddleware)
 app.set('trust proxy', 1)
