@@ -1,17 +1,19 @@
-// const User = require('../models/userModel')
-// const Order = require('../models/orderModel')
-
 /*
 * TODO
 * Add room functionality
 * But with different bots
 * Different languages or styles
-* Should use an API for that
+* Will make use an API for that
 */
 
 
 const socketHandler = (socket) => {
+    const userDevice = socket.request.headers['user-agent']
+    if(userDevice) {
+        socket.request.session.save()
+    }
     const user = {}
+    
     socket.on('startChat', (username) => {
         
         user.name = username
