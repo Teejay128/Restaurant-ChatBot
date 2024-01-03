@@ -9,7 +9,9 @@
 		<link rel="stylesheet" href="css/style.css" />
 		<link
 			rel="stylesheet"
-			href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+			href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css"
+			integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+			crossorigin="anonymous"
 		/>
 		<link
 			rel="stylesheet"
@@ -18,82 +20,135 @@
 	</head>
 	<body>
 		<!-- Navigation Bar -->
-		<nav class="navbar navbar-expand-lg navbar-dark bg-dark p-3">
-			<a class="navbar-brand h1" href="#">FoodGPT</a>
-			<button class="ms-auto btn btn-primary" id="start">
-				Start Chat <i class="bi bi-chat-dots"></i>
+		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+			<!-- <img src="/docs/4.1/assets/brand/bootstrap-solid.svg" width="30" height="30" class="d-inline-block align-top" alt=""> -->
+			<a class="navbar-brand" href="#">Restaurant Chatbot</a>
+			<button
+				class="navbar-toggler"
+				type="button"
+				data-toggle="collapse"
+				data-target="#navbarNav"
+				aria-controls="navbarNav"
+				aria-expanded="false"
+				aria-label="Toggle navigation"
+			>
+				<span class="navbar-toggler-icon"></span>
 			</button>
+			<div class="collapse navbar-collapse" id="navbarNav">
+				<ul class="navbar-nav">
+					<li class="nav-item active">
+						<a class="nav-link" href="#"
+							>Home <span class="sr-only">(current)</span></a
+						>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#">Chat</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#">Contact</a>
+					</li>
+				</ul>
+			</div>
 		</nav>
 
-		<!-- Main Body Content -->
-		<!-- Add more styles to make this place pop -->
-		<div class="container mt-4">
-			<h2>Welcome to foodGPT</h2>
+		<!-- <form id="login_form">
+			<input type="text" class="name_input" placeholder="Username..." />
+			<button class="btn">Send <i class="fas fa-paper-plane"></i></button>
+		</form> -->
 
-			<p>
-				This chat application was created from scratch using
-				javascript/nodejs
-			</p>
-			<p>
-				The project does not make use of any external applications and
-				the responses are hard-coded
-			</p>
-			<p>
-				You can view the source code of this application on this GitHub
-				<a href="https://github.com/Teejay128/Restaurant-ChatBot"
-					>Repo</a
-				>
-			</p>
-			<p>
-				<small
-					>The chat interface I used as the basis for this design was
-					gotten from this
-					<a href="https://codepen.io/solygambas/pen/MWJxaOJ">pen </a>
-					on codepen.io</small
-				>
-			</p>
+		<div class="container">
+			<!-- Button trigger modal -->
+			<button
+				type="button"
+				class="btn btn-primary"
+				data-toggle="modal"
+				data-target="#exampleModalLong"
+			>
+				Launch demo modal
+			</button>
 		</div>
 
-		<!-- I might have to leave CSS to do this one oh -->
-		<!-- Chat container -->
-		<div class="chat-container">
-			<div class="chat-header">
-				<!-- Here details about the chat would be given -->
-				<h2>Aribad Canteen</h2>
-				<!-- I guess the cancel button would also be here -->
-			</div>
-			<div class="chat-body">
-				<!-- The chat and messages and all that -->
-				<div class="chat"></div>
-			</div>
-			<div class="chat-footer">
-				<!-- <h3>Modal Footer</h3> -->
-				<form id="message_form">
-					<input
-						type="number"
-						class="text_input"
-						placeholder="Enter 100 to go to mainmenu"
-						autofocus
-					/>
-					<button class="ms-auto btn btn-primary">
-						Send <i class="fas fa-paper-plane"></i>
-					</button>
-				</form>
+		<!-- Modal -->
+		<div
+			class="modal fade"
+			id="exampleModalLong"
+			tabindex="-1"
+			role="dialog"
+			aria-labelledby="exampleModalLongTitle"
+			aria-hidden="true"
+		>
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLongTitle">
+							Modal title
+						</h5>
+						<button
+							type="button"
+							class="close"
+							data-dismiss="modal"
+							aria-label="Close"
+						>
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div id="chatBody">
+							<p>All the chat messages go in here</p>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<form class="form-row align-items-center" id="chatForm">
+							<div class="col-auto">
+								<label class="sr-only" for="inlineFormInput"
+									>Message</label
+								>
+								<input
+									type="text"
+									class="form-control mb-2 w-100"
+									id="textInput"
+									placeholder="Enter 100 to go to Mainmenu"
+								/>
+							</div>
+
+							<div class="col-auto">
+								<button
+									type="submit"
+									class="btn btn-primary mb-2"
+									id="sendMessage"
+								>
+									Send <i class="bi bi-send"></i>
+								</button>
+							</div>
+						</form>
+					</div>
+				</div>
 			</div>
 		</div>
 
 		<!-- Footer -->
 		<footer
-			class="bg-dark text-white text-center py-2 fixed-bottom"
+			class="bg-secondary text-white text-center fixed-bottom"
 			style="z-index: 1"
 		>
 			<p>Aribad &copy; 2024 FoodGPT Application. All rights reserved.</p>
 		</footer>
-		<!-- 
-		<form id="login_form">
-			<input type="text" class="name_input" placeholder="Username..." />
-			<button class="btn">Send <i class="fas fa-paper-plane"></i></button>
-		</form> -->
+
+		<script
+			src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+			integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+			crossorigin="anonymous"
+		></script>
+		<script
+			src="https://cdn.jsdelivr.net/npm/popper.js@1.14.3/dist/umd/popper.min.js"
+			integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+			crossorigin="anonymous"
+		></script>
+		<script
+			src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js"
+			integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+			crossorigin="anonymous"
+		></script>
 
 		<script src="socket.io/socket.io.js"></script>
 		<script src="js/main.js"></script>

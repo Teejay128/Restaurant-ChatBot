@@ -1,19 +1,9 @@
-// This code block starts the chat
-const startBtn = document.querySelector("#start");
-const chatContainer = document.querySelector(".chat-container");
+// const loginForm = document.querySelector("#login_form");
+// const nameInput = document.querySelector(".name_input");
 
-const startChat = () => {
-	chatContainer.classList.remove("modal");
-	// The background should be blurred
-};
-
-startBtn.addEventListener("click", startChat);
-
-const chatMessages = document.querySelector(".chat");
-const loginForm = document.querySelector("#login_form");
-const chatForm = document.querySelector("#message_form");
-const textInput = document.querySelector(".text_input");
-const nameInput = document.querySelector(".name_input");
+const chatForm = document.querySelector("#chatForm");
+const textInput = document.querySelector(".textInput");
+const chatBody = document.querySelector("#chatBody");
 
 const socket = io();
 
@@ -46,7 +36,7 @@ socket.on("redirect", ({ route, text }) => {
 function newUser(e) {
 	e.preventDefault();
 
-	chatMessages.innerHTML = "";
+	chatBody.innerHTML = "";
 	loginForm.style.display = "none";
 	chatForm.style.display = "block";
 	let username = nameInput.value;
@@ -79,8 +69,8 @@ function sendMessage(e) {
         </div>
     `;
 
-	chatMessages.innerHTML += newMessage;
-	chatMessages.scrollTop = chatMessages.scrollHeight;
+	chatBody.innerHTML += newMessage;
+	chatBody.scrollTop = chatBody.scrollHeight;
 
 	startLoading();
 	// timeoutFunction(`A reply to ${msg}`)
@@ -95,8 +85,8 @@ function chatbotReply(text) {
     `;
 
 	endLoading();
-	chatMessages.innerHTML += messageReply;
-	chatMessages.scrollTop = chatMessages.scrollHeight;
+	chatBody.innerHTML += messageReply;
+	chatBody.scrollTop = chatBody.scrollHeight;
 }
 
 // Makes request to the backend, then calls reply function
@@ -110,7 +100,7 @@ function startLoading() {
             <p>...</p>
         </div>
     `;
-	chatMessages.innerHTML += messageReply;
+	chatBody.innerHTML += messageReply;
 }
 
 function endLoading() {
