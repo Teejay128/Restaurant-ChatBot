@@ -1,47 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Restaurant ChatBot</title>
-    <link rel="icon" type="image/x-icon" href="/assets/chatbot.jpg">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
-    <link rel="stylesheet" href="css/style.css" />
-  </head>
-  <body>
-    <div class="chat-container">
-      <div class="top">
-        <img class="avatar" src="assets/chatbot.jpg" alt="Bot Profile Picture">
-        <h2>foodGPT</h2>
-      </div>
-      
-      <div class="chat">
-        <h2>Welcome to foodGPT</h2>
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Restaurant ChatBot</title>
+		<link rel="icon" type="image/x-icon" href="/assets/chatbot.jpg" />
+		<link rel="stylesheet" href="css/style.css" />
+		<link
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+		/>
+		<link
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+		/>
+	</head>
+	<body>
+		<!-- Navigation Bar -->
+		<nav class="navbar navbar-expand-lg navbar-dark bg-dark p-3">
+			<a class="navbar-brand h1" href="#">FoodGPT</a>
+			<button class="ms-auto btn btn-primary" id="start">
+				Start Chat <i class="bi bi-chat-dots"></i>
+			</button>
+		</nav>
 
-        <p>This chat application was created from scratch using javascript/nodejs</p>
-        <p>The project does not make use of any external applications and the responses are hard-coded</p>
-        <p>You can view the source code of this application on this GitHub <a href="https://github.com/Teejay128/Restaurant-ChatBot">Repo</a></p>
-        <p><small>The chat interface I used as the basis for this design was gotten from this <a href="https://codepen.io/solygambas/pen/MWJxaOJ">pen </a> on codepen.io</small></p>
+		<!-- Main Body Content -->
+		<!-- Add more styles to make this place pop -->
+		<div class="container mt-4">
+			<h2>Welcome to foodGPT</h2>
 
-        <h2>Enter your name to start chatting</h2>
-      </div>
+			<p>
+				This chat application was created from scratch using
+				javascript/nodejs
+			</p>
+			<p>
+				The project does not make use of any external applications and
+				the responses are hard-coded
+			</p>
+			<p>
+				You can view the source code of this application on this GitHub
+				<a href="https://github.com/Teejay128/Restaurant-ChatBot"
+					>Repo</a
+				>
+			</p>
+			<p>
+				<small
+					>The chat interface I used as the basis for this design was
+					gotten from this
+					<a href="https://codepen.io/solygambas/pen/MWJxaOJ">pen </a>
+					on codepen.io</small
+				>
+			</p>
+		</div>
 
-      <div class="bottom">
-        <form id="login_form">
-          <input type="text" class="name_input" placeholder="Username..." />
-          <button class="btn">Send <i class="fas fa-paper-plane"></i></button>
-        </form>
-        <form id="message_form" style="display: none;">
-          <input type="number" class="text_input" placeholder="Enter 100 to go to mainmenu" autofocus />
-          <button class="btn">Send <i class="fas fa-paper-plane"></i></button>
-        </form>
-      </div>
-    </div>
-    <!-- <footer>
-    <p>Source code for <a href="https://codepen.io/solygambas/pen/MWJxaOJ">Chat interface</a> on codepen.io</p>
-    </footer> -->
-  </body>
-  <script src="socket.io/socket.io.js"></script>
-  <script src="js/main.js"></script>
+		<!-- I might have to leave CSS to do this one oh -->
+		<!-- Chat container -->
+		<div class="chat-container">
+			<div class="chat-header">
+				<!-- Here details about the chat would be given -->
+				<h2>Aribad Canteen</h2>
+				<!-- I guess the cancel button would also be here -->
+			</div>
+			<div class="chat-body">
+				<!-- The chat and messages and all that -->
+				<div class="chat"></div>
+			</div>
+			<div class="chat-footer">
+				<!-- <h3>Modal Footer</h3> -->
+				<form id="message_form">
+					<input
+						type="number"
+						class="text_input"
+						placeholder="Enter 100 to go to mainmenu"
+						autofocus
+					/>
+					<button class="ms-auto btn btn-primary">
+						Send <i class="fas fa-paper-plane"></i>
+					</button>
+				</form>
+			</div>
+		</div>
+
+		<!-- Footer -->
+		<footer
+			class="bg-dark text-white text-center py-2 fixed-bottom"
+			style="z-index: 1"
+		>
+			<p>Aribad &copy; 2024 FoodGPT Application. All rights reserved.</p>
+		</footer>
+		<!-- 
+		<form id="login_form">
+			<input type="text" class="name_input" placeholder="Username..." />
+			<button class="btn">Send <i class="fas fa-paper-plane"></i></button>
+		</form> -->
+
+		<script src="socket.io/socket.io.js"></script>
+		<script src="js/main.js"></script>
+	</body>
 </html>

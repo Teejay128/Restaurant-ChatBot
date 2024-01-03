@@ -1,115 +1,121 @@
-const chatMessages = document.querySelector('.chat')
-const loginForm = document.querySelector('#login_form')
-const chatForm = document.querySelector('#message_form')
-const textInput = document.querySelector('.text_input')
-const nameInput = document.querySelector('.name_input')
+// This code block starts the chat
+const startBtn = document.querySelector("#start");
+const chatContainer = document.querySelector(".chat-container");
 
+const startChat = () => {
+	chatContainer.classList.remove("modal");
+	// The background should be blurred
+};
 
-const socket = io()
+startBtn.addEventListener("click", startChat);
 
-let emitter = "mainmenu"
-loginForm.addEventListener("submit", newUser)
-chatForm.addEventListener("submit", sendMessage)
+const chatMessages = document.querySelector(".chat");
+const loginForm = document.querySelector("#login_form");
+const chatForm = document.querySelector("#message_form");
+const textInput = document.querySelector(".text_input");
+const nameInput = document.querySelector(".name_input");
 
+const socket = io();
 
-socket.on('message', (question) => {
-    let msg = `${question}`
+let emitter = "mainmenu";
+loginForm.addEventListener("submit", newUser);
+chatForm.addEventListener("submit", sendMessage);
 
-    chatbotReply(msg)
-})
+socket.on("message", (question) => {
+	let msg = `${question}`;
 
-socket.on('options', ({ options, divider }) => {
-    let msg = ""
+	chatbotReply(msg);
+});
 
-    Object.keys(options).forEach((option) => {
-        msg += `<li class="option">Enter ${option} ${divider} ${options[option]}</li>`
-    })
+socket.on("options", ({ options, divider }) => {
+	let msg = "";
 
-    chatbotReply(msg)
-})
+	Object.keys(options).forEach((option) => {
+		msg += `<li class="option">Enter ${option} ${divider} ${options[option]}</li>`;
+	});
 
-socket.on('redirect', ({ route, text }) => {
-    emitter = route
-    socket.emit(emitter, text)
-    // chatbotReply(text)
-})
+	chatbotReply(msg);
+});
 
+socket.on("redirect", ({ route, text }) => {
+	emitter = route;
+	socket.emit(emitter, text);
+	// chatbotReply(text)
+});
 
 function newUser(e) {
-    e.preventDefault()
+	e.preventDefault();
 
-    chatMessages.innerHTML = ""
-    loginForm.style.display = "none"
-    chatForm.style.display = "block"
-    let username = nameInput.value
-    let msg = `Hi ${username}, you are being redirected to the main menu`
-    chatbotReply(msg)
+	chatMessages.innerHTML = "";
+	loginForm.style.display = "none";
+	chatForm.style.display = "block";
+	let username = nameInput.value;
+	let msg = `Hi ${username}, you are being redirected to the main menu`;
+	chatbotReply(msg);
 
-    socket.emit('startChat', username)
+	socket.emit("startChat", username);
 }
 
 // User sends a message
 function sendMessage(e) {
-    e.preventDefault()
+	e.preventDefault();
 
-    const msg = textInput.value
-    textInput.value = ""
-    if(msg === "") {
-        return
-    }
+	const msg = textInput.value;
+	textInput.value = "";
+	if (msg === "") {
+		return;
+	}
 
-    if (msg == 100) {
-        emitter = "mainmenu"
-        socket.emit(emitter, "")
-    } else {
-        socket.emit(emitter, msg)
-    }
+	if (msg == 100) {
+		emitter = "mainmenu";
+		socket.emit(emitter, "");
+	} else {
+		socket.emit(emitter, msg);
+	}
 
-    const newMessage = `
+	const newMessage = `
         <div class="message right">
             <p>${msg}</p>
         </div>
-    `
-    
-    chatMessages.innerHTML += newMessage
-    chatMessages.scrollTop = chatMessages.scrollHeight
+    `;
 
-    startLoading()
-    // timeoutFunction(`A reply to ${msg}`)
+	chatMessages.innerHTML += newMessage;
+	chatMessages.scrollTop = chatMessages.scrollHeight;
+
+	startLoading();
+	// timeoutFunction(`A reply to ${msg}`)
 }
 
-
 // Replies the user
-function chatbotReply(text){
-    const messageReply = `
+function chatbotReply(text) {
+	const messageReply = `
         <div class="message left">
             ${text}
         </div>
-    `
+    `;
 
-    endLoading()
-    chatMessages.innerHTML += messageReply
-    chatMessages.scrollTop = chatMessages.scrollHeight
+	endLoading();
+	chatMessages.innerHTML += messageReply;
+	chatMessages.scrollTop = chatMessages.scrollHeight;
 }
-
 
 // Makes request to the backend, then calls reply function
 function timeoutFunction() {
-    // this handles message loader and other functionality for delivering response
+	// this handles message loader and other functionality for delivering response
 }
 
 function startLoading() {
-    const messageReply = `
+	const messageReply = `
         <div class="message left" id="loading">
             <p>...</p>
         </div>
-    `
-    chatMessages.innerHTML += messageReply
+    `;
+	chatMessages.innerHTML += messageReply;
 }
 
 function endLoading() {
-    let loader = document.querySelector('#loading')
-    if(loader) {
-        loader.remove()
-    }
+	let loader = document.querySelector("#loading");
+	if (loader) {
+		loader.remove();
+	}
 }

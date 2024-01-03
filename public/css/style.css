@@ -4,181 +4,49 @@
   box-sizing: border-box;
 }
 
-body {
-  font-family: "Lato", sans-serif;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 75vh;
-  padding: 5% 20%;
-  background: linear-gradient(to right, #fffa, #482a);
-  /* background-image: url("../assets/landscape.jpg"); */
-  background-size: cover;
-  text-align: center;
-}
-
 .chat-container {
-  background: linear-gradient(to right, #482a, #fffa);
-  width: 100%;
-  height: 160%;
-  /* min-height: 480px; */
-  justify-content: top;
-  min-width: 360px;
-  border-radius: 2rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
-  overflow-y: auto;
-  position: relative;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    height: 80%;
+    background-color: #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
 }
 
-.chat {
-  display: flex;
-  flex-direction: column;
-  height: 480px;
-  overflow-y: scroll;
-  padding: 0 2%;
-  /* margin: 1%; */
+.chat-header {
+    color: white;
+    background-color: #212529;
+    height: 10%;
+    padding: 10px;
 }
 
-.top {
-	color: #fff;
-  background-color: #4b802f;
-	display: flex;
-	padding: 0.2rem 1rem;
+.chat-body {
+    flex-grow: 1;
+    padding: 10px;
 }
 
-.bottom {
-	color: #fff;
-  background-color: #4b802f;
-	display: flex;
-  flex-direction: column;
-	padding: 1.5rem 0;
+.chat-footer {
+    color: white;
+    background-color: red;
+    display: flex;
+    flex-direction: row;
+    height: 10%;
+    padding: 10px;
 }
 
-h2 {
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 1);
-  color: #fff;
-  margin: 1rem;
-  letter-spacing: 1px;
-  text-align: center;
+form input {
+    position: relative;
+    background-color: green;
+    /* flex-grow: 1; */
+    padding: 10px;
 }
 
-.avatar {
-  border-radius: 50%;
-  object-fit: cover;
-  position: relative;
-  margin-top: 10px;
-  margin-right: 10px;
-  width: 50px;
-  height: 50px;
-  border: 2px solid #b8c4cc;
-}
-
-.message {
-  border-radius: 1rem;
-  position: relative;
-  font-size: 1rem;
-  padding: 0.5rem 0.7rem;
-}
-
-.message.left {
-  margin-top: 5px;
-  max-width: 80%;
-  background-color: #fff;
-  border: 2px solid #cccccc;
-  text-align: left;
-}
-
-.message.right {
-  align-self: flex-end;
-  margin: 1rem 0;
-  max-width: 80%;
-  background-color: #4b802f;
-  color: #fff;
-  word-wrap: break-word;
-  text-align: left;
-}
-
-.message.selected {
-  margin-top: 5px;
-  max-width: 80%;
-  background-color: #ccc;
-  border: 2px solid #4b802f;
-  font-weight: bold;
-  text-align: left;
-}
-
-.message p {
-  margin: 0;
-}
-
-.text_input {
-  width: 70%;
-  padding: 0.5rem 1rem;
-  border: 2px solid #4b802f;
-  border-radius: 2rem;
-  font-size: 1rem;
-}
-
-.name_input {
-  width: 70%;
-  padding: 0.5rem 1rem;
-  border: 2px solid #4b802f;
-  border-radius: 2rem;
-  font-size: 1rem;
-}
-
-.btn {
-  color: #fff;
-  background-color: #4b802f;
-	font-size: 1rem;
-  font-weight: bold;
-  width: 20%;
-  padding: 0.5rem;
-  border: 2px solid white;
-  border-radius: 2rem;
-  cursor: pointer;
-}
-
-.btn:active {
-  color: #fff;
-  background-color: #5ba03f;
-	font-size: 1rem;
-  font-weight: bold;
-  width: 20%;
-  padding: 0.5rem;
-  border: 2px solid white;
-  border-radius: 2rem;
-}
-
-/* 
-.options {
-  padding: 0;
-  margin: 0 0.5rem;
-}
-
-.option {
-  background-color: #ccc;
-  padding: 0.2rem;
-  margin: 0.2rem 0;
-  border: 0.2rem solid #4b802f;
-  border-radius: 0.5rem;
-} */
-
-/* .time {
-  font-size: small;
-  padding-top: 0.7rem;
-  color: #aaa;
-  float: right;
-} */
-
-@media (max-width: 480px) {
-  *{
-    padding: 0;
-    margin: 0;
-  }
-
-  .chat-container{
-    width: 360px;
-  }
+form button {
+    background-color: blue;
+    width: 10%;
+    padding: 10px;
 }
