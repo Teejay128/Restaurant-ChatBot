@@ -15,7 +15,13 @@
  */
 
 const socketHandler = (socket) => {
+	socket.on("message", (msg) => {
+		const reply = msg.toUpperCase();
+		socket.emit("reply", reply);
+	});
+
 	const userDevice = socket.request.headers["user-agent"];
+	// You gon need to implement authentication form here, sigh...
 	if (userDevice) {
 		socket.request.session.save();
 	}
