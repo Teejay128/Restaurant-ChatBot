@@ -14,17 +14,34 @@
  *
  */
 
+const { geminiChat } = require("./gemini");
+
 const socketHandler = (socket) => {
-	socket.on("message", (msg) => {
-		const reply = msg.toUpperCase();
+	console.log("Connection successful");
+
+	socket.on("message", async (newChat) => {
+		const { msg, chatHistory } = newChat;
+
+		console.log("Message received");
+		const reply = await geminiChat(msg, chatHistory);
+
 		socket.emit("reply", reply);
 	});
+};
 
-	const userDevice = socket.request.headers["user-agent"];
-	// You gon need to implement authentication form here, sigh...
-	if (userDevice) {
-		socket.request.session.save();
-	}
+/*
+const socketHandler = (socket) => {
+	// socket.on("message", (msg) => {
+	// 	const reply = msg.toUpperCase();
+	// 	socket.emit("reply", reply);
+	// });
+
+	// const userDevice = socket.request.headers["user-agent"];
+	// // You gon need to implement authentication form here, sigh...
+	// if (userDevice) {
+	// 	socket.request.session.save();
+	// }
+
 	const user = {};
 
 	socket.on("startChat", (username) => {
@@ -292,5 +309,5 @@ const socketHandler = (socket) => {
 		}
 	});
 };
-
+*/
 module.exports = socketHandler;

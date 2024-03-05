@@ -4,115 +4,133 @@
 const chatBody = document.querySelector("#chatBody");
 const chatForm = document.querySelector("#chatForm");
 const textInput = document.querySelector("#textInput");
-const sendButton = document.querySelector("sendButton");
+
+const chatHistory = [
+	{
+		role: "user",
+		parts: "I need you to play the role of a restaurant waitress that is taking my order, keep your responses short and brief",
+	},
+	{
+		role: "model",
+		parts: "Sure, I can do that for you. Welcome. What would you like to eat?",
+	},
+];
 
 const socket = io();
 
-let emitter = "mainmenu";
-// loginForm.addEventListener("submit", newUser);
 chatForm.addEventListener("submit", sendMessage);
 
 socket.on("reply", (msg) => {
 	chatbotReply(msg);
 });
 
-socket.on("message", (question) => {
-	let msg = `${question}`;
+// socket.on("message", (question) => {
+// 	let msg = `${question}`;
 
-	chatbotReply(msg);
-});
+// 	chatbotReply(msg);
+// });
 
-socket.on("options", ({ options, divider }) => {
-	let msg = "";
+// socket.on("options", ({ options, divider }) => {
+// 	let msg = "";
 
-	Object.keys(options).forEach((option) => {
-		msg += `<li class="option">Enter ${option} ${divider} ${options[option]}</li>`;
-	});
+// 	Object.keys(options).forEach((option) => {
+// 		msg += `<li class="option">Enter ${option} ${divider} ${options[option]}</li>`;
+// 	});
 
-	chatbotReply(msg);
-});
+// 	chatbotReply(msg);
+// });
 
-socket.on("redirect", ({ route, text }) => {
-	emitter = route;
-	socket.emit(emitter, text);
-	// chatbotReply(text)
-});
+// socket.on("redirect", ({ route, text }) => {
+// 	emitter = route;
+// 	socket.emit(emitter, text);
+// 	// chatbotReply(text)
+// });
 
+// // Starts the chat in the backend
 // function newUser(e) {
 // 	e.preventDefault();
 
-// 	chatBody.innerHTML = "";
-// 	loginForm.style.display = "none";
-// 	chatForm.style.display = "block";
-// 	let username = nameInput.value;
-// 	let msg = `Hi ${username}, you are being redirected to the main menu`;
-// 	chatbotReply(msg);
+// 	// chatBody.innerHTML = "";
+// 	// loginForm.style.display = "none";
+// 	// chatForm.style.display = "block";
+// 	// let username = nameInput.value;
+// 	// let msg = `Hi ${username}, you are being redirected to the main menu`;
+// 	// chatbotReply(msg);
 
 // 	socket.emit("startChat", username);
 // }
 
-// User sends a message
+// Display the chat on the frontend
+function displayChat(chatObj) {
+	let newChat;
+	if (chatObj.role == "user") {
+		newChat = `
+			<div class="d-flex flex-row justify-content-end mb-4">
+				<div class="p-2 me-3 border rounded bg-light">
+					<p class="small mb-0">${chatObj.parts}</p>
+				</div>
+				<img
+					src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp"
+					alt="avatar 1"
+					style="width: 45px; height: 100%;"
+				/>
+			</div>
+			`;
+	} else {
+		newChat = `
+			<div class="d-flex flex-row justify-content-start mb-4">
+				<img
+					src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp"
+					alt="avatar 1"
+					style="width: 45px; height: 100%;"
+				/>
+				<div class="p-2 ms-3 bg-secondary text-white rounded">
+					<p class="small mb-0">${chatObj.parts}</p>
+				</div>
+			</div>
+			`;
+	}
+
+	chatBody.innerHTML += newChat;
+
+	textInput.scrollIntoView({
+		behavior: "smooth",
+		block: "center",
+		inline: "center",
+	});
+}
+
+// Sends user message to the backend
 function sendMessage(e) {
 	e.preventDefault();
 
 	const msg = textInput.value;
 	textInput.value = "";
-	textInput.scrollIntoView({
-		behavior: "smooth",
-		block: "center",
-		inline: "center",
-	});
 
 	if (msg === "") {
 		return;
 	}
 
-	const newMessage = `
-	<div class="d-flex flex-row justify-content-end mb-4">
-	<div class="p-2 me-3 border rounded bg-light">
-		<p class="small mb-0">${msg}</p>
-	</div>
-	<img
-		src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp"
-		alt="avatar 1"
-		style="width: 45px; height: 100%;"
-	/>
-	</div>
-	`;
+	// Add message to the Array
+	const newMessage = {
+		role: "user",
+		parts: msg,
+	};
 
-	chatBody.innerHTML += newMessage;
+	socket.emit("message", { msg, chatHistory });
 
-	// setTimeout(() => chatbotReply("OH, thats rude of you to say"), 2000);
-
-	socket.emit("message", msg);
-	// // Now emit the request to the backend
-	// if (msg == 100) {
-	// 	emitter = "mainmenu";
-	// 	socket.emit(emitter, "");
-	// } else {
-	// 	socket.emit(emitter, msg);
-	// }
+	chatHistory.push(newMessage);
+	displayChat(newMessage);
 }
 
-// Replies the user
+// Gets the reply from the backend and displays it to the User
 function chatbotReply(text) {
-	const messageReply = `
-	<div class="d-flex flex-row justify-content-start mb-4">
-		<img
-			src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp"
-			alt="avatar 1"
-			style="width: 45px; height: 100%;"
-		/>
-		<div class="p-2 ms-3 bg-secondary text-white rounded">
-			<p class="small mb-0">${text}</p>
-		</div>
-	</div>
-    `;
+	// Add text to the array
+	const newReply = {
+		role: "model",
+		parts: text,
+	};
 
-	chatBody.innerHTML += messageReply;
-	textInput.scrollIntoView({
-		behavior: "smooth",
-		block: "center",
-		inline: "center",
-	});
+	chatHistory.push(newReply);
+	displayChat(newReply);
 }
