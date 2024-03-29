@@ -1,3 +1,6 @@
+// Implement authentication with sockets...
+// For now, find a way to mimic registered users
+
 const path = require("path");
 const express = require("express");
 const { createServer } = require("http");
@@ -6,15 +9,18 @@ const session = require("express-session");
 require("dotenv").config();
 
 const socketHandler = require("./sockets");
+
 const app = express();
 const httpServer = createServer(app);
 const io = socketio(httpServer);
 const port = process.env.PORT || 3000;
+
 const sessionMiddleware = session({
 	secret: process.env.SECRET_KEY,
 	saveUninitialized: true,
 	resave: false,
 });
+
 const connect = (middleware) => {
 	return (socket, next) => {
 		middleware(socket.request, {}, next);

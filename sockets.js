@@ -6,55 +6,53 @@
  * Will make use an API for that
  */
 
-/**
- * Upgrade Edit
- * First I need to understand the functionality of all the code that is here
- * Then I can start adding additional functionality
- * Also improve the Frontend a bit, it looks disgusting
- *
- */
-
 const { geminiChat } = require("./gemini");
 
 const socketHandler = (socket) => {
 	console.log("Connection successful");
 
+	const userDevice = socket.request.headers["user-agent"];
+	if (userDevice) {
+		socket.request.session.save();
+	}
+
+	const user = {
+		name: "Bonheur", // This should come from session authentication
+		id: socket.id,
+		orders: [],
+		currentOptions: [],
+	};
+
 	socket.on("message", async (newChat) => {
 		const { msg, chatHistory } = newChat;
 
-		console.log("Message received");
+		// Might reduce the model temperature
 		const reply = await geminiChat(msg, chatHistory);
 
+		if (!reply) {
+			socket.emit(
+				"error",
+				"An error occured while processing your request"
+			);
+			return;
+		}
+
+		// If model responds with options
+		if (reply.slice(0, 1) == "*") {
+			console.log(reply);
+			socket.emit("option", reply);
+			return;
+		}
+
+		// If it is just a normal reply
 		socket.emit("reply", reply);
+		console.log(reply);
 	});
 };
 
 /*
-const socketHandler = (socket) => {
-	// socket.on("message", (msg) => {
-	// 	const reply = msg.toUpperCase();
-	// 	socket.emit("reply", reply);
-	// });
-
-	// const userDevice = socket.request.headers["user-agent"];
-	// // You gon need to implement authentication form here, sigh...
-	// if (userDevice) {
-	// 	socket.request.session.save();
-	// }
-
-	const user = {};
-
-	socket.on("startChat", (username) => {
-		user.name = username;
-		user.id = socket.id;
-		user.orders = [];
-
-		socket.emit(
-			`Hi ${user.name}, welcome to the world's first unintelligent food service chatbot`
-		);
-		socket.emit("redirect", { route: "mainmenu", text: "" });
-	});
-
+const socketHandler = (socket) => {	
+	
 	socket.on("mainmenu", (msg) => {
 		let options = {
 			1: "Place an order",
@@ -310,4 +308,5 @@ const socketHandler = (socket) => {
 	});
 };
 */
+
 module.exports = socketHandler;

@@ -5,10 +5,20 @@ const chatBody = document.querySelector("#chatBody");
 const chatForm = document.querySelector("#chatForm");
 const textInput = document.querySelector("#textInput");
 
+const socket = io();
+const prompt = `
+	I need you to play the role of a restaurant waiter that is taking an order from a customer.
+	Your responses should be short, brief, and incite a reply from the customer.
+	When you need to respond with a list of things, do not add any additional statements.
+	Separate the list items with an asterisk, and don't include any whitespace.
+	For Example:
+	User: What are your top 5 starters?
+	Model: *Bruschetta*Calamari Fritti*Mozzarella Sticks*Soup of the Day*Chicken Wings
+`;
 const chatHistory = [
 	{
 		role: "user",
-		parts: "I need you to play the role of a restaurant waitress that is taking my order, keep your responses short and brief",
+		parts: prompt,
 	},
 	{
 		role: "model",
@@ -16,76 +26,54 @@ const chatHistory = [
 	},
 ];
 
-const socket = io();
-
 chatForm.addEventListener("submit", sendMessage);
 
+// Gets the reply from the backend and displays it to the User
 socket.on("reply", (msg) => {
-	chatbotReply(msg);
+	const newReply = {
+		role: "model",
+		parts: msg,
+	};
+
+	chatHistory.push(newReply);
+	newReply.parts = `<p class="small mb-0">${msg}</p>`;
+	displayMessage(newReply);
 });
 
-// socket.on("message", (question) => {
-// 	let msg = `${question}`;
+// Displays options for the user to choose from
+socket.on("option", (reply) => {
+	let options = reply.split("*");
+	options.shift();
 
-// 	chatbotReply(msg);
-// });
+	const newReply = {
+		role: "model",
+		parts: reply,
+	};
 
-// socket.on("options", ({ options, divider }) => {
-// 	let msg = "";
+	chatHistory.push(newReply);
+	newReply.parts = convertToList(options);
+	displayMessage(newReply);
 
-// 	Object.keys(options).forEach((option) => {
-// 		msg += `<li class="option">Enter ${option} ${divider} ${options[option]}</li>`;
-// 	});
-
-// 	chatbotReply(msg);
-// });
-
-// socket.on("redirect", ({ route, text }) => {
-// 	emitter = route;
-// 	socket.emit(emitter, text);
-// 	// chatbotReply(text)
-// });
-
-// // Starts the chat in the backend
-// function newUser(e) {
-// 	e.preventDefault();
-
-// 	// chatBody.innerHTML = "";
-// 	// loginForm.style.display = "none";
-// 	// chatForm.style.display = "block";
-// 	// let username = nameInput.value;
-// 	// let msg = `Hi ${username}, you are being redirected to the main menu`;
-// 	// chatbotReply(msg);
-
-// 	socket.emit("startChat", username);
-// }
+	// Also configue next response to pertain to option
+});
 
 // Display the chat on the frontend
-function displayChat(chatObj) {
+function displayMessage(chatObj) {
 	let newChat;
 	if (chatObj.role == "user") {
+		// Might remove the profile images in the chat
 		newChat = `
 			<div class="d-flex flex-row justify-content-end mb-4">
-				<div class="p-2 me-3 border rounded bg-light">
+				<div class="p-2 me-3 rounded text-white bg-secondary">
 					<p class="small mb-0">${chatObj.parts}</p>
 				</div>
-				<img
-					src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp"
-					alt="avatar 1"
-					style="width: 45px; height: 100%;"
-				/>
 			</div>
 			`;
 	} else {
 		newChat = `
 			<div class="d-flex flex-row justify-content-start mb-4">
-				<img
-					src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp"
-					alt="avatar 1"
-					style="width: 45px; height: 100%;"
-				/>
-				<div class="p-2 ms-3 bg-secondary text-white rounded">
-					<p class="small mb-0">${chatObj.parts}</p>
+				<div class="p-2 ms-3 bg-light border rounded">
+					${chatObj.parts}
 				</div>
 			</div>
 			`;
@@ -107,30 +95,53 @@ function sendMessage(e) {
 	const msg = textInput.value;
 	textInput.value = "";
 
-	if (msg === "") {
+	if (msg == "") {
+		// Also send error message
 		return;
 	}
 
-	// Add message to the Array
-	const newMessage = {
-		role: "user",
-		parts: msg,
-	};
+	// TWO DIFFERENT CASES
 
-	socket.emit("message", { msg, chatHistory });
+	// NORMAL MESSAGE
+	if (typeof msg == "string") {
+		// Add message to the Array
+		const newMessage = {
+			role: "user",
+			parts: msg,
+		};
+		socket.emit("message", { msg, chatHistory });
+		chatHistory.push(newMessage);
+		displayMessage(newMessage);
+	}
 
-	chatHistory.push(newMessage);
-	displayChat(newMessage);
+	// // NUMBER MESSAGE
+	// if (typeof msg == "number") {
+	// 	// Get the selected number
+	// 	// Send that to the backend
+	// 	const optionList = [];
+
+	// 	const option = optionList[msg - 1];
+
+	// 	// Add message to the Array
+	// 	const newMessage = {
+	// 		role: "user",
+	// 		parts: `${msg - 1}: ${option}`,
+	// 	};
+
+	// 	socket.emit("message", { msg: option, chatHistory });
+	// 	chatHistory.push(newMessage);
+	// 	displayMessage(newMessage);
+	// }
 }
 
-// Gets the reply from the backend and displays it to the User
-function chatbotReply(text) {
-	// Add text to the array
-	const newReply = {
-		role: "model",
-		parts: text,
-	};
+function convertToList(options) {
+	let list = "";
 
-	chatHistory.push(newReply);
-	displayChat(newReply);
+	options.forEach((option, index) => {
+		list += `<li>${index + 1}: ${option}</li>`;
+	});
+
+	list += "<p>Please Pick A Number</p>";
+
+	return list;
 }
