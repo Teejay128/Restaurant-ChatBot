@@ -6,10 +6,11 @@ const chatForm = document.querySelector("#chatForm");
 const textInput = document.querySelector("#textInput");
 
 const socket = io();
+let currentOptions = [];
 const prompt = `
 	I need you to play the role of a restaurant waiter that is taking an order from a customer.
 	Your responses should be short, brief, and incite a reply from the customer.
-	When you need to respond with a list of things, do not add any additional statements.
+	Any time you respond with a list of things, do not add any additional statements.
 	Separate the list items with an asterisk, and don't include any whitespace.
 	For Example:
 	User: What are your top 5 starters?
@@ -26,7 +27,21 @@ const chatHistory = [
 	},
 ];
 
-chatForm.addEventListener("submit", sendMessage);
+chatForm.addEventListener("submit", (e) => {
+	e.preventDefault();
+	const msg = textInput.value;
+	textInput.value = "";
+
+	if (msg == "") {
+		return;
+	}
+
+	if (textInput.type == "text") {
+		sendMessage(msg);
+	} else {
+		chooseOption(msg);
+	}
+});
 
 // Gets the reply from the backend and displays it to the User
 socket.on("reply", (msg) => {
@@ -42,19 +57,27 @@ socket.on("reply", (msg) => {
 
 // Displays options for the user to choose from
 socket.on("option", (reply) => {
-	let options = reply.split("*");
-	options.shift();
-
 	const newReply = {
 		role: "model",
 		parts: reply,
 	};
 
 	chatHistory.push(newReply);
-	newReply.parts = convertToList(options);
-	displayMessage(newReply);
 
-	// Also configue next response to pertain to option
+	let options = reply.split("*");
+	options.shift();
+	currentOptions = options;
+
+	const newOption = {
+		role: "model",
+		parts: convertToList(options),
+	};
+	displayMessage(newOption);
+
+	// Change textInput type to number, set appropriate min and max values
+	textInput.type = "number";
+	textInput.min = 1;
+	textInput.max = options.length;
 });
 
 // Display the chat on the frontend
@@ -65,7 +88,7 @@ function displayMessage(chatObj) {
 		newChat = `
 			<div class="d-flex flex-row justify-content-end mb-4">
 				<div class="p-2 me-3 rounded text-white bg-secondary">
-					<p class="small mb-0">${chatObj.parts}</p>
+					<div class="small mb-0">${chatObj.parts}</div>
 				</div>
 			</div>
 			`;
@@ -73,7 +96,7 @@ function displayMessage(chatObj) {
 		newChat = `
 			<div class="d-flex flex-row justify-content-start mb-4">
 				<div class="p-2 ms-3 bg-light border rounded">
-					${chatObj.parts}
+					<div class="small mb-0">${chatObj.parts}</div>
 				</div>
 			</div>
 			`;
@@ -89,59 +112,34 @@ function displayMessage(chatObj) {
 }
 
 // Sends user message to the backend
-function sendMessage(e) {
-	e.preventDefault();
+function sendMessage(msg) {
+	const newMessage = {
+		role: "user",
+		parts: msg,
+	};
 
-	const msg = textInput.value;
-	textInput.value = "";
+	socket.emit("message", { msg, chatHistory });
+	chatHistory.push(newMessage);
+	displayMessage(newMessage);
+}
 
-	if (msg == "") {
-		// Also send error message
-		return;
-	}
+function chooseOption(msg) {
+	// How do i get this function to access "options"
+	textInput.type = "text";
+	textInput.max = "";
+	textInput.min = "";
 
-	// TWO DIFFERENT CASES
-
-	// NORMAL MESSAGE
-	if (typeof msg == "string") {
-		// Add message to the Array
-		const newMessage = {
-			role: "user",
-			parts: msg,
-		};
-		socket.emit("message", { msg, chatHistory });
-		chatHistory.push(newMessage);
-		displayMessage(newMessage);
-	}
-
-	// // NUMBER MESSAGE
-	// if (typeof msg == "number") {
-	// 	// Get the selected number
-	// 	// Send that to the backend
-	// 	const optionList = [];
-
-	// 	const option = optionList[msg - 1];
-
-	// 	// Add message to the Array
-	// 	const newMessage = {
-	// 		role: "user",
-	// 		parts: `${msg - 1}: ${option}`,
-	// 	};
-
-	// 	socket.emit("message", { msg: option, chatHistory });
-	// 	chatHistory.push(newMessage);
-	// 	displayMessage(newMessage);
-	// }
+	socket.emit("option", currentOptions[msg - 1]);
 }
 
 function convertToList(options) {
-	let list = "";
+	let list = `<ul class="list-group list-group-flush">`;
 
-	options.forEach((option, index) => {
-		list += `<li>${index + 1}: ${option}</li>`;
+	options.forEach((option) => {
+		list += `<li class="list-group-item">${option}</li>`;
 	});
 
-	list += "<p>Please Pick A Number</p>";
+	list += "</ul>";
 
 	return list;
 }

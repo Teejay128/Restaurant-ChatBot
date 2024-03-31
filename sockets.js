@@ -29,6 +29,8 @@ const socketHandler = (socket) => {
 		// Might reduce the model temperature
 		const reply = await geminiChat(msg, chatHistory);
 
+		console.log(reply);
+
 		if (!reply) {
 			socket.emit(
 				"error",
@@ -38,18 +40,23 @@ const socketHandler = (socket) => {
 		}
 
 		// If model responds with options
-		if (reply.slice(0, 1) == "*") {
-			console.log(reply);
+		if (reply[0] == "*") {
 			socket.emit("option", reply);
 			return;
 		}
 
 		// If it is just a normal reply
 		socket.emit("reply", reply);
-		console.log(reply);
+	});
+
+	socket.on("option", (option) => {
+		optionHandler(option);
 	});
 };
 
+const optionHandler = (option) => {
+	console.log(option);
+};
 /*
 const socketHandler = (socket) => {	
 	
