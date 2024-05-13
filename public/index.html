@@ -21,16 +21,6 @@
 			rel="stylesheet"
 			href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
 		/>
-		<style>
-			.sticky-container {
-				position: -webkit-sticky;
-				position: sticky;
-				top: 0; /* Adjust as needed based on your design */
-				background-color: #f1f1f1; /* Add a background color if desired */
-				padding: 10px; /* Add padding to the sticky element */
-				z-index: 100; /* Ensure it's above other content */
-			}
-		</style>
 	</head>
 	<body>
 		<!-- Navigation Bar -->
@@ -65,11 +55,6 @@
 			</div>
 		</nav>
 
-		<!-- <form id="login_form">
-			<input type="text" class="name_input" placeholder="Username..." />
-			<button class="btn">Send <i class="fas fa-paper-plane"></i></button>
-		</form> -->
-
 		<div class="container">
 			<!-- Button trigger modal -->
 			<button
@@ -78,7 +63,7 @@
 				data-toggle="modal"
 				data-target="#exampleModalLong"
 			>
-				Launch demo modal
+				Open Chat
 			</button>
 		</div>
 
@@ -93,7 +78,7 @@
 		>
 			<div class="modal-dialog modal-lg" role="document">
 				<div class="modal-content">
-					<div class="modal-header sticky-container">
+					<div class="modal-header">
 						<h5 class="modal-title" id="exampleModalLongTitle">
 							Modal title
 						</h5>
@@ -150,7 +135,9 @@
 					<div class="modal-footer">
 						<form class="form-row align-items-center" id="chatForm">
 							<div class="col-auto">
-								<label class="sr-only" for="inlineFormInput"
+								<label
+									class="sr-only leng"
+									for="inlineFormInput"
 									>Message</label
 								>
 								<input
@@ -167,6 +154,12 @@
 									class="btn btn-primary mb-2"
 								>
 									Send <i class="bi bi-send"></i>
+								</button>
+							</div>
+
+							<div class="col-auto">
+								<button class="btn btn-primary mb-2 order">
+									Check Out <i class="bi bi-cart"></i>
 								</button>
 							</div>
 						</form>

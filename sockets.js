@@ -3,7 +3,7 @@
  * Add room functionality
  * But with different bots
  * Different languages or styles
- * Will make use an API for that
+ * All so make the orders more straightforward
  */
 
 const { geminiChat } = require("./gemini");
@@ -29,7 +29,7 @@ const socketHandler = (socket) => {
 		// Might reduce the model temperature
 		const reply = await geminiChat(msg, chatHistory);
 
-		console.log(reply);
+		// console.log(reply);
 
 		if (!reply) {
 			socket.emit(
@@ -49,14 +49,49 @@ const socketHandler = (socket) => {
 		socket.emit("reply", reply);
 	});
 
-	socket.on("option", (option) => {
-		optionHandler(option);
+	socket.on("option", async (newOption) => {
+		const { option, chatHistory } = newOption;
+
+		user.orders.push(option);
+		const msg = `Acknoledge that an order for ${option} has been placed, then ask me what else I'd like to order.`;
+		const reply = await geminiChat(msg, chatHistory);
+
+		if (!reply) {
+			socket.emit(
+				"error",
+				"An error occured while processing your request"
+			);
+			return;
+		}
+		socket.emit("reply", reply);
+		// console.log(user);
+	});
+
+	socket.on("order", async (chatHistory) => {
+		let userOrders = user.orders;
+
+		if (!userOrders.length) {
+			let reply =
+				"Sorry, you haven't ordered anything yet. Order something first to proceed to check out.";
+			socket.emit("reply", reply);
+			return;
+		}
+
+		let msg = "Here is a list of your orders\n";
+		let total = 0;
+		userOrders.forEach((order) => {
+			let item = order.split("$");
+			msg += `${item[0]} is $${item[1]} \n`;
+			total += parseFloat(item[1]);
+		});
+		msg += `Total is $${total}\n`;
+		msg += "Click on the Check Out button again to proceed to check out.";
+
+		console.log(msg);
+		socket.emit("order", msg);
 	});
 };
 
-const optionHandler = (option) => {
-	console.log(option);
-};
 /*
 const socketHandler = (socket) => {	
 	
