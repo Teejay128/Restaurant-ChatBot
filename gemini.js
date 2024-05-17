@@ -21,6 +21,7 @@ async function geminiChat(msg, history) {
 	}
 }
 
+// // To test if the gemini api connection is functional
 // const msg = "What are the top five desserts available.";
 // const history = [
 // 	{

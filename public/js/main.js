@@ -2,36 +2,21 @@
 // Suggested Requests
 // Login and signup
 // Do some frontend polishing and testing
+// Process how the final check out is done
 
 // ELEMENTS
 const chatBody = document.querySelector("#chatBody");
 const chatForm = document.querySelector("#chatForm");
 const textInput = document.querySelector("#textInput");
-const order = document.querySelector(".order");
+const modalBtn = document.querySelector(".modalBtn");
+const accordion = document.querySelector(".accordion");
+const orderCard = document.querySelector(".orderCard");
+const bill = document.querySelector(".bill");
 
 // VARIABLES
 const socket = io();
-let confirmOrder = false;
 let currentOptions = [];
-const prompt = `
-	I need you to play the role of a restaurant waiter that is taking an order from a customer.
-	Your responses should be short, brief, and incite a reply from the customer.
-	Any time you respond with a list of things, do not add any additional statements.
-	Separate the list items with an asterisk, and don't include any whitespace.
-	For Example:
-	User: What are your top 5 starters?
-	Model: *Bruschetta $4.99*Calamari Fritti $12.49*Mozzarella Sticks $6.99*Soup of the Day $5.49*Chicken Wings $7.99
-`;
-const chatHistory = [
-	{
-		role: "user",
-		parts: prompt,
-	},
-	{
-		role: "model",
-		parts: "Sure, I can do that for you. Welcome, would you like to check our starters?",
-	},
-];
+let chatHistory = [];
 
 // EVENT LISTENERS
 chatForm.addEventListener("submit", (e) => {
@@ -64,24 +49,6 @@ chatBody.addEventListener("click", (e) => {
 	}
 });
 
-order.addEventListener("click", () => {
-	if (confirmOrder) {
-		// Place the order and proceed to checkout
-		console.log("Your order has been placed");
-		confirmOrder = false;
-		// Restart the page and start afresh or something
-		return;
-	}
-
-	const newMessage = {
-		role: "user",
-		parts: "I would like to place an order...",
-	};
-
-	displayMessage(newMessage);
-	socket.emit("order", chatHistory);
-});
-
 // SOCKET LISTENERS
 socket.on("reply", (msg) => {
 	const newReply = {
@@ -90,7 +57,6 @@ socket.on("reply", (msg) => {
 	};
 
 	chatHistory.push(newReply);
-	// newReply.parts = `<p class="mb-0">${msg}</p>`;
 	displayMessage(newReply);
 });
 
@@ -117,16 +83,28 @@ socket.on("option", (reply) => {
 	textInput.max = options.length;
 });
 
-socket.on("order", (msg) => {
-	let newOrder = {
-		role: "model",
-		parts: msg,
-	};
+socket.on("order", (orders) => {
+	if (!orders.length) {
+		bill.innerHTML = `<p class="text-secondary text-center">Your orders will show up here</p>`;
+		return;
+	}
 
-	// What else do I need to do here?
+	let total = 0;
+	let orderList = [];
 
-	displayMessage(newOrder);
-	confirmOrder = true;
+	orders.forEach((order) => {
+		console.log(order);
+		let item = order.split("$");
+		let orderItem = `${item[0]} <span class="float-end">$${item[1]}</span>`;
+		total += parseFloat(item[1]);
+
+		orderList.push(orderItem);
+	});
+
+	orderList.push(`Total: <span class="float-end text-info">$${total}</span>`);
+
+	let billList = convertToList(orderList);
+	bill.innerHTML = billList;
 });
 
 // HELPING FUNCTIONS
@@ -186,14 +164,73 @@ function chooseOption(msg) {
 	displayMessage(newMessage);
 }
 
-function convertToList(options) {
+function convertToList(items) {
 	let list = `<ul class="list-group list-group-flush">`;
 
-	options.forEach((option) => {
-		list += `<li class="list-group-item option">${option}</li>`;
+	items.forEach((item) => {
+		list += `<li class="list-group-item option">${item}</li>`;
 	});
 
 	list += "</ul>";
 
 	return list;
+}
+
+function selectBot(bot) {
+	let prompt;
+	// Use a switch statement to select the bot
+	switch (bot) {
+		case "american":
+			prompt = "an american";
+			break;
+		case "french":
+			prompt = "a french";
+			break;
+		case "nigerian":
+			prompt = "a nigerian";
+			break;
+		default:
+			prompt = `a`;
+	}
+
+	let msg = `
+		I need you to play the role of a waiter that is taking the order of a customer at ${prompt} restaurant.
+		Your responses should be casual, friendly, and incite a response from the customer
+		However, when you are responding with a list of items for the customer to choose from,
+		your response should contain only the list of items you are responding with,
+		start your response with an asterisk and separate each item with an asterisk.
+		For example:
+		User: What dishes do you have for starters
+		Model: *dish 1 $5.99*dish 2 $6.99*dish 3 $3.59*dish 4 $6.99*dish 5 $12.49
+	`;
+
+	chatHistory = [
+		{
+			role: "user",
+			parts: msg,
+		},
+		{
+			role: "model",
+			parts: "Sure, I can do that for you. Welcome, would you like to check our starters?",
+		},
+	];
+
+	modalBtn.classList.remove("d-none");
+	orderCard.classList.remove("d-none");
+	accordion.classList.add("d-none");
+}
+
+function resetChat() {
+	modalBtn.classList.add("d-none");
+	orderCard.classList.add("d-none");
+	accordion.classList.remove("d-none");
+
+	chatHistory = [];
+	currentOptions = [];
+}
+
+function checkOut() {
+	window.alert("Your order has been placed");
+
+	resetChat();
 }
