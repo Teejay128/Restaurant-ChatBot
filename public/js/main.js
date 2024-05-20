@@ -107,6 +107,11 @@ socket.on("order", (orders) => {
 	bill.innerHTML = billList;
 });
 
+socket.on("checkout", (reply) => {
+	window.alert(reply);
+	resetChat();
+});
+
 // HELPING FUNCTIONS
 function displayMessage(chatObj) {
 	let newChat;
@@ -183,8 +188,11 @@ function selectBot(bot) {
 		case "american":
 			prompt = "an american";
 			break;
-		case "french":
-			prompt = "a french";
+		case "vegan":
+			prompt = "a vegan";
+			break;
+		case "kfc":
+			prompt = "a KFC";
 			break;
 		case "nigerian":
 			prompt = "a nigerian";
@@ -199,9 +207,9 @@ function selectBot(bot) {
 		However, when you are responding with a list of items for the customer to choose from,
 		your response should contain only the list of items you are responding with,
 		start your response with an asterisk and separate each item with an asterisk.
-		For example:
+		Here is an example:
 		User: What dishes do you have for starters
-		Model: *dish 1 $5.99*dish 2 $6.99*dish 3 $3.59*dish 4 $6.99*dish 5 $12.49
+		Model: *Tuna Salad $22.50*Mac & Cheese $18.00*Banana Bread $6.00*Chickpea Tagine $18.00*Sausage Etoufee $12.49
 	`;
 
 	chatHistory = [
@@ -230,7 +238,5 @@ function resetChat() {
 }
 
 function checkOut() {
-	window.alert("Your order has been placed");
-
-	resetChat();
+	socket.emit("order", chatHistory);
 }

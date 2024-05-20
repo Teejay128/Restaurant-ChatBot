@@ -66,6 +66,18 @@ const socketHandler = (socket) => {
 		socket.emit("reply", reply);
 		// console.log(user);
 	});
+
+	socket.on("order", async (chatHistory) => {
+		const msg = `
+			Here is the array of the list of orders made by me
+			${user.orders}
+			The user is about to proceed to check out, leave a final message for them based on what they ordered without including their total, and thank them for the patronage.
+		`;
+
+		const reply = await geminiChat(msg, chatHistory);
+		// console.log(reply);
+		socket.emit("checkout", reply);
+	});
 };
 
 module.exports = socketHandler;
