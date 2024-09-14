@@ -1,7 +1,14 @@
 require("dotenv").config();
 const { GoogleGenerativeAI } = require("@google/generative-ai");
+
 const genAI = new GoogleGenerativeAI(process.env.API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+const model = genAI.getGenerativeModel({
+	model: "gemini-pro",
+	// Some additional parameters to reduce randomness of responses
+	temperature: 0.2,
+	topK: 2,
+	topP: 0.5,
+});
 
 async function geminiChat(msg, history) {
 	try {
