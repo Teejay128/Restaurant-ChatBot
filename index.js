@@ -1,6 +1,3 @@
-// Implement authentication with sockets...
-// For now, find a way to mimic registered users
-
 const path = require("path");
 const express = require("express");
 const { createServer } = require("http");
